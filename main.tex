@@ -1,0 +1,124 @@
+
+\documentclass[12pt]{article}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{float}
+\setstretch{1.2}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    % Logo
+    \vspace*{1cm}
+    \includegraphics[width=0.35\textwidth]{MainePad2.png}\par
+    \vspace{1cm}
+    % Title text
+    {\Huge\bfseries Zillow Data Scraping Documentation\par}
+    \vspace{0.5cm}
+    {\Large Maine Pad Finder Project\par}
+    \vspace{1cm}
+    % Course and authors
+    {\large COS 457 Database Systems\par}
+    \vspace{0.5cm}
+    {\large Jeffrey Fosgate \par}
+    {\large Yunlong Li \par}
+    \vfill
+
+    \vfill
+\end{titlepage}
+
+
+\section{Overview}
+This project is a simple web scraper that collects rental property listings in Maine from Zillow and exports them into a structured CSV file for later analysis and database usage.
+
+The scraper:
+\begin{itemize}
+\item Iterates through Zillow result pages.
+\item Visits each property page and each unit page for apartment complexes.
+\item Extracts name, address, rent, bedrooms, bathrooms, apartment number, and square footage.
+\item Outputs all data to \texttt{zillow-properties.csv}.
+\end{itemize}
+
+\section{Files}
+
+\texttt{Fosgate\_ZillowScraper.py}
+
+Main scraper script:
+\begin{itemize}
+\item Builds Zillow pagination URLs
+\item Extracts property links
+\item Detects single properties or apartment complexes
+\item Extracts unit-level details
+\item Saves CSV as output
+\end{itemize}
+
+\section{Requirements:}
+\begin{itemize}
+\item Python 3
+\item \texttt{pip install requests}
+\item \texttt{Beautiful Soup 4}
+\end{itemize}
+
+\section{How To Run}
+\begin{enumerate}
+\item Install dependencies:
+\begin{verbatim}
+pip install requests beautifulsoup4
+\end{verbatim}
+\item Run the script:
+\begin{verbatim}
+python Fosgate_ZillowScraper.py
+\end{verbatim}
+\item The output \texttt{zillow-properties.csv} will appear in the same directory.
+\end{enumerate}
+
+\section{How It Works}
+
+\subsection{Page Loop}
+The script loops pages until Zillow shows no more results.
+
+\subsection{Property Detection}
+Each link is checked:
+\begin{itemize}
+\item If no unit table exists $\rightarrow$ single property.
+\item If unit cards exist $\rightarrow$ apartment complex (unit card view).
+\item If simple table exists $\rightarrow$ apartment complex (table view).
+\end{itemize}
+
+\subsection{Single Properties}
+Extract:
+\begin{itemize}
+\item Address.
+\item Rent.
+\item Beds and baths.
+\item Square footage.
+\end{itemize}
+
+\subsection{Apartment Units}
+For unit cards and tables:
+\begin{itemize}
+\item Copy base building info.
+\item Extract unit-specific rent, square footage, bed/bath counts, and apartment number.
+\end{itemize}
+
+\subsection{Final Export}
+Writes all data as rows into \texttt{zillow-properties.csv}.
+
+
+
+\section{Data Format}
+\begin{itemize}
+\item \textbf{NAME}: Property or unit name.
+\item \textbf{ADDR}: Address stored in a list-like string.
+\item \textbf{RENT\_COST}: Monthly rent.
+\item \textbf{BEDROOMS}: Bedroom count.
+\item \textbf{BATHROOMS}: Bathroom count.
+\item \textbf{APT\_NUM}: Unit number (0 for single properties).
+\item \textbf{SQFT}: Square footage.
+\end{itemize}
+
+\end{document}
