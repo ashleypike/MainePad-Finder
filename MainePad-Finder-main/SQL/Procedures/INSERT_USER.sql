@@ -1,0 +1,24 @@
+-- TITLE: INSERT_USER
+-- AUTHOR: Ashley Pike
+-- DATE OF GITHUB COMMIT: 11/5/2025
+-- A simple stored procedure for inserting given values into a new user instance
+
+DELIMITER $$
+
+CREATE PROCEDURE INSERT_USER (
+    -- Variables to be included
+    IN p_USERNAME VARCHAR(50),
+   	IN p_PASS_WORD VARCHAR(50),
+	IN p_EMAIL VARCHAR(100),
+    IN p_PHONE_NUMBER VARCHAR(20),
+    IN p_GENDER CHAR(1),
+    IN p_BIRTH_DATE DATE,
+    IN p_DISPLAY_NAME VARCHAR(200)
+    )
+BEGIN
+    -- Inserting values
+    INSERT INTO USERS (USERNAME, PASS_WORD, EMAIL, PHONE_NUMBER, GENDER, BIRTH_DATE, DISPLAY_NAME)
+    VALUES (p_USERNAME, p_PASS_WORD, p_EMAIL, p_PHONE_NUMBER, p_GENDER, p_BIRTH_DATE, p_DISPLAY_NAME);
+END$$
+
+DELIMITER ;
