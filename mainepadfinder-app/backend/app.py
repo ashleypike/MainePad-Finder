@@ -152,14 +152,12 @@ def get_properties():
                 A.CITY,
                 A.STATE_CODE,
                 A.STREET,
-                A.ZIPCODE,
-                P.PROPERTY_RATING AS AVG_RATING
+                A.ZIPCODE
             FROM PROPERTY AS P
             JOIN ADDRESS AS A
             ON P.ADDR_ID = A.ADDR_ID
             WHERE 1=1
         """
-
 
         params = []
 
@@ -208,13 +206,12 @@ def get_properties():
                 "sqft": row["SQFT"],
                 "city": row["CITY"],
                 "state": row["STATE_CODE"],
-                "avgRating": row.get("AVG_RATING"),
 
                 "addressLine1": row["STREET"],
                 "addressLine2": None,         
                 "zipCode": row["ZIPCODE"],
-            })
-            
+    })
+          
 
         return jsonify(properties), 200
 
@@ -330,28 +327,49 @@ def get_property_deals():
     except Exception as e:
         print("Error in /api/properties/deals:", e)
         return jsonify({"error": "Failed to load best deals"}), 500
-    from flask import Flask, request, jsonify, g
-from functools import wraps
 
 @app.post("/api/listing/<int:property_id>/review")
-def create_review(property_id):
-    data = request.get_json()
-    stars = data.get("stars")
-    comments = data.get("comments")
+@login_required
+def create_or_update_review(property_id):
+    """
+    Create or update a review for a single property by the logged-in user.
+    Uses the REVIEW table and enforces stars 1–5.
+    """
+    try:
+        data = request.get_json() or {}
+        stars = data.get("stars")
+        comments = (data.get("comments") or "").strip() or None
 
-    # use the logged-in user's ID once login is wired in here
-    user_id = 1  # placeholder for now
+        # validate stars
+        try:
+            stars_val = float(stars)
+        except (TypeError, ValueError):
+            return jsonify({"error": "Stars must be a number between 1 and 5."}), 400
 
-    cursor.execute(
-        """
-        INSERT INTO REVIEW (USER_ID, PROPERTY_ID, COMMENTS, STARS)
-        VALUES (%s, %s, %s, %s)
-        """,
-        (user_id, property_id, comments, stars),
-    )
-    db.commit()
+        if not (1 <= stars_val <= 5):
+            return jsonify({"error": "Stars must be between 1 and 5."}), 400
 
-    return jsonify({"message": "Review submitted"}), 201
+        user_id = g.user_id  # from login_required
+
+        cursor.execute(
+            """
+            INSERT INTO REVIEW (USER_ID, PROPERTY_ID, COMMENTS, STARS)
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE
+                COMMENTS = VALUES(COMMENTS),
+                STARS = VALUES(STARS)
+            """,
+            (user_id, property_id, comments, stars_val),
+        )
+        db.commit()
+
+        return jsonify({"message": "Review saved successfully"}), 201
+
+    except Exception as e:
+        print("Error in /api/listing/<id>/review:", e)
+        return jsonify({"error": "Failed to save review"}), 500
+
+
 
 if __name__ == "__main__":
     

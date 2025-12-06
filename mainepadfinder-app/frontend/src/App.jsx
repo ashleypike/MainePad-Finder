@@ -11,6 +11,8 @@ import Listing from "./pages/Listing.jsx";
 import Properties from "./pages/Properties.jsx";
 import ManageProperties from "./pages/ManageProperties.jsx";
 import AddProperty from "./pages/AddProperty.jsx";
+import Messages from "./pages/Messages.jsx";
+
 
 function App() {
   const [data, setData] = useState("");
@@ -108,6 +110,12 @@ function App() {
             >
               Profile
             </Link>
+              <Link
+                to="/messages"
+                style={{ textDecoration: "none", color: "#FFFFFF" }}
+              >
+                Messages
+              </Link>
             <Link
               to="/settings"
               style={{ textDecoration: "none", color: "#FFFFFF" }}
@@ -133,11 +141,14 @@ function App() {
       {/* MAIN CONTENT */}
       <main
         style={{
-          maxWidth: "1120px",
+          width: "100%",
+          maxWidth: "1200px", // or remove this line if you want true full-bleed
           margin: "0 auto",
           padding: "1.5rem",
-        }}
-      >
+  }}
+>
+
+      
         {data && (
           <p style={{ marginBottom: "1rem", color: "#4B5563" }}>
             {data}
@@ -155,6 +166,7 @@ function App() {
           <Route path="/properties" element={<Properties />} />
           <Route path="/manage-properties" element={<ManageProperties />} />
           <Route path="/add-property" element={<AddProperty />} />
+          <Route path="/messages" element={<Messages />} />
         </Routes>
       </main>
     </div>

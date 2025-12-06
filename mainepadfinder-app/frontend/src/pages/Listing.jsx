@@ -175,7 +175,13 @@ export default function Listing() {
   // If user hit /listing/:id directly, show message 
   if (!property || !n) {
     return (
-      <div style={{ padding: "2rem 3rem" }}>
+      <div
+        style={{
+          padding: "2rem 3rem",
+          minHeight: "calc(100vh - 64px)",
+          boxSizing: "border-box",
+        }}
+      >
         <button
           type="button"
           onClick={() => navigate("/properties")}
@@ -201,7 +207,13 @@ export default function Listing() {
   }
 
   return (
-    <div style={{ padding: "2rem 3rem" }}>
+    <div
+      style={{
+        padding: "2rem 3rem",
+        minHeight: "calc(100vh - 64px)",
+        boxSizing: "border-box",
+      }}
+    >
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -229,7 +241,7 @@ export default function Listing() {
           border: "1px solid #e5e7eb",
           borderRadius: "12px",
           padding: "1.5rem 1.75rem",
-          maxWidth: "720px",
+          maxWidth: "1000px",
           background: "#ffffff",
           boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
         }}
