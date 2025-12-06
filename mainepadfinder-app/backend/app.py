@@ -64,10 +64,8 @@ def signup():
 
     hashedPassword = generate_password_hash(password)
 
-    cursor.execute(
-        "INSERT INTO USERS (USERNAME, PASS_WORD, EMAIL, PHONE_NUMBER, GENDER, BIRTH_DATE, DISPLAY_NAME) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        (username, hashedPassword, email, phoneNumber, gender, birthDate, displayName)
-    )
+    parameters = (email, username, hashedPassword, phoneNumber, birthDate, displayName, gender)
+    cursor.callproc("INSERT_USER", parameters)
 
     userID = cursor.lastrowid
     
@@ -172,6 +170,7 @@ def prop_price_trending(prop_id):
         return 1
 
 # Author: Ashley Pike
+# Arguments for running app.py
 if __name__ == "__main__":
     app.run(
         host='localhost',
