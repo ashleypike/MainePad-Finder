@@ -26,7 +26,6 @@ dist-ssr
 # Python environment
 venv/
 pyvenv.cfg
-.env
 
 # Python cache files
 __pycache__/
