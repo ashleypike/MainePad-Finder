@@ -1,14 +1,14 @@
-## Overview
+# Overview
 
 An application for the locating of apartments near college and potential roommate matching
 
 
-## Installation & Setup
+# Installation & Setup
 
 This project consists of a React (Vite) frontend, a Flask backend, and a MySQL database.  
 Follow these steps to install and run the project locally.
 
-### Requirements
+### Requirements:
 
 Python (3.10+)  
 Node.js (v25+)  
@@ -18,14 +18,14 @@ mkcert
 Chocolatey (If mkcert and MySQL server not installed)  
 ---
 
-### Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone https://github.com/ashleypike/MainePad-Finder
 cd MainePad-Finder
 ```
 
-### Installation 
+## Installation 
 
 **The database user *admin/admin* is assumed to already exist as per assignment instructions.**  
 Run the installation script from the root of the directory:
@@ -45,7 +45,7 @@ When run, this will:
 8. Inserts sample data into database
 
 
-### Running
+## Running
 
 Start both the backend and the frontend using:
 ```bash
