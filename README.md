@@ -16,7 +16,6 @@ Git Bash/Powershell
 MySQL Server  
 mkcert  
 Chocolatey (If mkcert and MySQL server not installed)  
----
 
 ## Clone the Repository
 
