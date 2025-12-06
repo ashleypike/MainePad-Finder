@@ -1,0 +1,317 @@
+Jeffrey Fosgate  0:00  
+As soon as this thing works, yeah,
+
+let's see. I'll just put this here.
+
+Speaker 1  0:13  
+Me testing one two.
+
+Jeffrey Fosgate  0:16  
+Yeah, you want to just just a couple testing words.
+
+Speaker 1  0:20  
+Hello, hello,
+
+Speaker 1  0:23  
+oh, hello, peekaboo,
+
+Jeffrey Fosgate  0:28  
+maybe conversation. Oh, there we go. Well, it got that at least, awesome. Okay, sweet, okay,
+
+let's see, where should we begin?
+
+Okay, well, I guess I'll repeat the purpose of this particular interview. I'm going to be participating this semester in a project with three other developers to create a web application that should be useful for college students. And I've selected you because you yourself are a college student that could possibly provide some input into its development, which is what most of these questions will pertain to in some fashion. I'll explain in more detail later the exact description of what the project will be about. But for now, we'll just get on to some of the questions. To begin, do you give me permission to record your voice using otter AI, which is what I'm using right now? Yes, you have my permission. Okay, wonderful.
+
+And so
+
+with that in mind, would you be able to divulge what
+
+year of college you're in and what college you're attending?
+
+Speaker 1  1:55  
+I'm in my first year of college at SMCC.
+
+Jeffrey Fosgate  1:58  
+Okay, so my first question will be, what are some of the biggest frustrations you've experienced throughout your college experience thus far? And these don't have to be necessarily single events or encounters. They could be things that have blighted your college experience in its entirety. Maybe, for instance, commuting or studying are the examples I've given. So anything that you would say has frustrated you a lot as a college student so far,
+
+Speaker 1  2:29  
+I think my biggest frustration actually relates to your project. For me, it's navigating our school's website.
+
+Jeffrey Fosgate  2:36  
+Okay, let's see.
+
+So
+
+I have these questions a little bit disordered, so I apologize for the delay. So my second question would be, how are you currently renting out a property for school? No, any kind of rental property? No, okay, so I will divulge that the general basic purpose of this app is going to be to provide students with an easier way to find properties near them that they can possibly rent out and know more information about the rental Okay? Of those properties? So that'll be the general purpose of this application, hopefully once it is, once it's completed, and so a couple of these questions will be about that, even if the experience of rental right now might not apply to you, it would still be useful to have your input as a college student. Okay, so firstly, as a student, what would you want to know about a property before renting it? What are some things you'd want to know about that property?
+
+Speaker 1  3:59  
+I'd want to know the square footage, how many bedrooms and bathrooms there are, and I'd want to know if it's like a single unit or multi unit.
+
+Jeffrey Fosgate  4:08  
+Okay, as a student, what would you want to know, if anything about a property's landlord before renting that property?
+
+Speaker 1  4:19  
+I probably want like, a background of like a criminal background check. I want to know how they are, because I wouldn't want to have, like a crazy landlord
+
+Jeffrey Fosgate  4:28  
+for sure, for sure. And
+
+as a student, what would you want to know about your roommates, potentially, if any, before renting a property with them,
+
+Speaker 1  4:39  
+probably their personality like their work schedule, because I wouldn't want to have roommates that have classroom work schedules, because it can be hard sleeping.
+
+Jeffrey Fosgate  4:47  
+Yeah, I can understand that.
+
+How frustrating has commuting to college been for you so far? For instance, has your commute to college have has it frustrated your college experience in general, in any significant way? I commuted
+
+Speaker 1  5:07  
+before, so I can say I've experienced some frustration going over the Catskill Bay Bridge. So sometimes it can take longer to get there when I do, and it's pretty frustrating having to wait in
+
+Jeffrey Fosgate  5:19  
+traffic. make it more difficult to get to classes, that sort of thing. I. So let's say that, well I suppose to go back to that question, I guess maybe from a scale of one to 10 How frustrating. Would you say it's been with one being, it hasn't really bothered me at all 10 being. it's frustrated me consistently from the beginning, commuting. Yes, yes. Probably a seven, okay, so, so quite a bit, I'd imagine. Yeah. Okay, so let's say that you had to rent out a new property right now for college purposes, or just so that you could be able to attend to your
+
+college responsibilities.
+
+What would be the one thing in that property that would motivate your decision the most? So let's say you have a bunch of properties to choose from, from some rental website and you want to pick the best one for you, would you say there's maybe a single factor or maybe several that you would absolutely need to consider? For instance, maybe price or proximity to your campus, any assortment of
+
+Speaker 1  6:42  
+things I would want a long commute, and another big thing for me would be a driveway, because especially in cities like Portland, South Portland, it can be really hard parking off in the street, especially during like parking bans when they plow. Yeah.
+
+Jeffrey Fosgate  6:59  
+So to go back to that one regarding the driveway, would you say, this is just a question I'm thinking about now that you mention it, would you say that
+
+sort of all of a sudden,
+
+I suppose construction work or other things that might happen in the city that suddenly induce traffic? Would you say that's something that is a constant problem for you as a commute, as a when you commute to college, or something that you'd probably
+
+want to consider a lot
+
+Speaker 1  7:38  
+while you're I think that would be important to consider too depending on the route you take, because it can increase the traffic and increase your
+
+Jeffrey Fosgate  7:46  
+commune time. So maybe just some information about how many or how much construction tends to happen there, the frequency of it would possibly
+
+Speaker 1  7:56  
+be helpful to you. That would be pretty helpful. Yeah. Okay.
+
+Jeffrey Fosgate  8:00  
+Now, are there any aspects of a rental property that, if you saw it, it would be a complete deal breaker for you, as in as soon as you see it on whatever listing you find, you'd know immediately this property isn't for me,
+
+Speaker 1  8:15  
+I would say, probably the layout of the apartment that might depending on what the layout is, that could be a deal
+
+Jeffrey Fosgate  8:20  
+breaker for me. Does that mean maybe, how many?
+
+Or does that also include, for instance, the size of the property itself in full, or, um, maybe how many rooms there are, or how the
+
+Speaker 1  8:34  
+rooms are laid out, how the rooms room are laid out. Because, you know, like the easement, they could have, like a two bedroom, but you have to go through one bedroom to get to the other. Oh, yes, that can be a little annoying,
+
+Jeffrey Fosgate  8:47  
+maybe a bit of a hassle. Okay, I'm just looking through some of my questions to see if I have any more at the moment, I
+
+uh, well, I guess to go back to the topic of landlords. Have you had, have you had any experience negotiating with a landlord or having to deal with them in any kind of rental or property purchasing setting of any
+
+Speaker 1  9:23  
+kind? No, I've never had to negotiate with landlord. No, have you
+
+Jeffrey Fosgate  9:28  
+heard, perhaps, of any classmates or other students that have had to deal with the problem in the past, or what they've
+
+Speaker 1  9:34  
+had to say about it? No one that I could recall.
+
+Jeffrey Fosgate  9:37  
+I haven't either for reference. I'm just I it's a perspective I'm looking for as part of these interviews as well and looking for kind of a comprehensive
+
+understanding of the situation.
+
+I guess this question somewhat relates to some of the other questions I've asked already. But when looking into a new apartment, what would make you feel secure in renting it or purchasing it in general? Maybe not something that would convince you that you ought to absolutely move in, but something that would at
+
+Speaker 1  10:19  
+least allow you to consider it. Could you repeat that? I just want to think about that.
+
+Jeffrey Fosgate  10:23  
+Yeah, clearly, when looking into a new apartment, what would make you feel secure in purchasing or renting it,
+
+Speaker 1  10:33  
+probably knowing that there isn't, like any structural damage, because that can cause issues too, like if you have a ceiling with a hole in it or It's leaking, that could be frustrating to deal with, and it would make me more apprehensive to
+
+Jeffrey Fosgate  10:50  
+renting it. Okay, okay,
+
+let me actually pull up a description for you of what this app is supposed to be, just a brief description of
+
+how the application should come up.
+
+Because part of what I'm hoping to accomplish with this interview is that I'll be able to, in addition to some of the requirements I've been recommended to implement, perhaps I could find some other implements I could include, or our team could include as part of the design of the project.
+
+Speaker 1  11:41  
+So to recap, our
+
+Jeffrey Fosgate  11:45  
+project is it's going to be called the main pad finder, and what it's supposed to do is help students get different data about their desired housing options, perhaps in a specific locale or perhaps in proximity to a college that they're going to some key features that have been suggested are calculations for commute time and mapping how that commute will be performed, a rating system, possibly for landlords and property qualities. You it might be similar to other apps that you've seen, such as Zillow.
+
+Speaker 1  12:24  
+I've used that realtor. It sounds like Craig, looks like it makes between Craigslist and realtor
+
+Jeffrey Fosgate  12:29  
+is what I'm assuming, in a sense, yeah, I gather from this that there will be a rating for the property itself, and then perhaps also a rating for the landlord, and perhaps how responsive he is, how helpful he is, okay, those sorts of things. There may also be roommate matching based on preferences. You mentioned earlier that there might be a few characteristics of a roommate you would prefer to know, and that's where that would possibly go in, maybe price trend analysis and alerts for the properties that you might wish to
+
+purchase and then
+
+a so called virtual tour or photo
+
+Speaker 1  13:14  
+verification. I think that would be helpful, just because that would be helpful for you. You don't want to get, like, an apartment where you end up finding a bunch of issues, like structurally, why? Structural wise, you wouldn't want to get an apartment where there's water leaking or appliances don't work, because that could make it frustrating having to deal with that, because then you're taking time out of your day to
+
+Jeffrey Fosgate  13:34  
+get that situated. Yeah, I'm sure you'd agree that external photos are one thing, but being able to actually see the inside, yes, yes. Be able to see the inside of a property. And I gather that's also the purpose of this virtual tour, is that it will give you some visualization of the property
+
+Speaker 1  13:56  
+itself. I actually just thought of something that would be pretty cool too, maybe being able to leave comments under a property like past tenants leaving comments about a property, like maybe they had issues with it, and they could rate it under there. Okay, well, that'd be pretty
+
+Jeffrey Fosgate  14:10  
+cool too. Yeah, I actually
+
+see that was actually my final question. I was going to say really. So for this application, the main pad finder. Now that you know the full description of what this app is supposed to be. I'd like to get your input on any features, perhaps not described in the project description that you would possibly want to see, just envisioning that perhaps if you were in the situation of needing to rent a property, especially as a student going to college, right with, with that responsibility in mind, is there any other feature of any sort, including, for instance, the comment feature that you were, that you suggested, which I think is very nice that would,
+
+Speaker 1  14:58  
+if that's transparency, right, you could look on Zillow or realtor.com for example, but you don't know anything about people that might have rented out that property in the past, so it could be a problem landlord, and there could be an issue that property that you might
+
+Speaker 1  15:16  
+end up being apprehensive you wouldn't want to rent out that
+
+Jeffrey Fosgate  15:19  
+property. Yeah, I'm sure you'd agree that. Again, it's one thing to simply see a a numerical value as representative of a property's quality, zero to five stars, for instance. But it's a considerably different and perhaps much more vivid thing to have comments from actual realtors, former lessees of the property, telling you precisely what they experienced and what
+
+Speaker 1  15:45  
+they gathered from members don't necessarily tell the whole picture, right?
+
+Jeffrey Fosgate  15:49  
+I agree, too, that's an interesting idea.
+
+Well, again, I'd like to give you the opportunity, if any other ideas come to mind, to perhaps describe if, for instance, if, what would you want, perhaps, out of this project yourself as a college student, or for other college students to have just given all that you've learned about this particular project so far, in a conceptual sense,
+
+Speaker 1  16:20  
+I guess, other than That
+
+Speaker 1  16:23  
+comment section idea, I would want the user interface to not be like, super bogged down, because a lot of problems with apps is it's hard to navigate through the app, and it just really bogs it down and makes it a pain
+
+Jeffrey Fosgate  16:37  
+in the ass to use. Yeah, I understand what you mean. There's a lot of there's a lot of UI elements that can it's very easy to have them cluster together very uncomfortable
+
+Speaker 1  16:46  
+way I want it to be organized, because it should be a supplement to my quality of life and not a detriment, right?
+
+Jeffrey Fosgate  16:53  
+Or the surface itself should not be something that is marred in any way by the user interface. It should be essentially or intuitive in a sense, yeah,
+
+I guess a thought that I'm having now is
+
+assuming that the people who would own this, or that would the people who would use this project, are students. Would you say? Do you have maybe an idea of what a profile for the average student would look like, maybe, what kind of aspects would you expect a student trying to rent out properties to describe of themselves?
+
+Speaker 1  17:34  
+Maybe, possibly they're like the general stuff, like their age, their gender, because sometimes that can matter, like you have women that would feel more secure with renting out two other women
+
+Jeffrey Fosgate  17:46  
+or with other women? Yeah,
+
+Speaker 1  17:50  
+maybe criminal background. Maybe, if it's clean, there's nothing that shows up. And if they have a criminal background, maybe have that listed too, or their maybe their budget too. That could be helpful too, because then you could use that as a filter for finding properties.
+
+Jeffrey Fosgate  18:07  
+Yeah, possible. I imagine what you mean by budget is that it would be helpful for you, for instance, if you wanted to, because and I think you'd agree, rental prices are really intense and expensive nowadays, especially for a student who himself is already marred by so many tuition fees and other costs. It's, it's, it would be convenient to know how much that person can cough up per month exactly to help out with budgeting.
+
+Speaker 1  18:34  
+I don't know who suggested like, maybe the it sounds like, almost like Tinder and realtor combined. I think that you could integrate some of those aspects of Tinder to as like filters when you're looking for properties or maybe roommates, that could be a helpful feature.
+
+Jeffrey Fosgate  18:51  
+I think, um, not to belabor that particular analogy too much, but I'm personally not too familiar
+
+Speaker 1  18:58  
+with Tinder myself. Neither am I. It just sounds similar, like swiping on roommates. Oh, sounds pretty similar. I mean, I've never used Tinder, so I can't really say exactly what the app is like, but
+
+Jeffrey Fosgate  19:10  
+it sounds similar. Me neither. So essentially that the big comparison that you've made is that it's perhaps the role of student profiles, in this sense, could work similar to how tender profiles work in the sense that they could be Match Made, yeah, almost okay, and that could possibly be done in with respect to, in perhaps, for instance, input or maybe shared interests.
+
+Yes. So it's almost a dating profile approach,
+
+Speaker 1  19:42  
+except for roommates. Exactly, yeah, like, find your roommate or something like that,
+
+Jeffrey Fosgate  19:47  
+yeah, yeah, something that effect. What I gather from this description is that it, I that is an interesting comparison. I didn't really make that. It essentially a combination of Zillow and
+
+Speaker 1  20:00  
+Tinder, essentially generic dating app type
+
+Jeffrey Fosgate  20:03  
+situation, yeah, but applied, perhaps in a different context, exactly, yeah, okay,
+
+Speaker 1  20:12  
+I guess.
+
+Jeffrey Fosgate  20:14  
+And this is another question that I'm simply thinking of now that you mentioned it, a thought that I may have, I personally have for development, is possibly that there could be some integrative process between what a student is given by their university and the app themselves. For instance, I'm sure you have a university email specifically that was given to you, and perhaps also a student ID. Do any thoughts come in mind as to possibly, would you find that convenient? For instance, if you could use your
+
+Speaker 1  20:50  
+your
+
+Jeffrey Fosgate  20:52  
+student specific things, be it email
+
+Speaker 1  20:54  
+or ID, I think maybe it would be, it should be requirement, because, if it's for college students, it should be requirement to use a school email.
+
+Jeffrey Fosgate  21:03  
+Yeah, I understand it again. This is a very conceptual idea.
+
+Speaker 1  21:08  
+Yeah, you're not like, you're not like, coming up with a you're not you don't already have it planned out. You're just kind of coming up
+
+Jeffrey Fosgate  21:15  
+with ideas. Yeah, right. It's conceptual. These interviews and your input is very valuable, precisely because it it guides quite dramatically the development process, because a lot of the ideas that you've just described here could very well be implemented into our final vision of the application. Because ultimately, this is a product that's designed for students. I know you've heard the phrase for a lot of products, probably, oh, this is designed by x for x. You know, this is designed by kids for kids, by moms for moms. Yeah, in this case, by students for students, exactly, in a way. And so I think that would be a good guiding principle for this.
+
+Speaker 1  21:59  
+I think the biggest thing would be like ease of use, because you wouldn't want to have an app where you're fumbling around with it trying to figure out how to use it. It should be easy to learn. Easy to learn how to use it, and it should be easy
+
+Jeffrey Fosgate  22:09  
+to navigate. Yeah, that I think also, I think you'd agree it would connect to the a good user interface, a intuitive one, essentially, is just that it would be easy to use. I think that those two things play on each other pretty intimately.
+
+Speaker 1  22:27  
+But I think possibly integrating, like some aspects from Tinder into the app would be helpful. If you could have a picture of the person you're trying to room up with, and it could show basic information, like their age, maybe general
+
+Jeffrey Fosgate  22:40  
+interests. Yeah. Yeah. Interesting.
+
+Well, I think with that, just again,
+
+just to wrap things up, any final thoughts in general, even related to, oh, excuse me, I have a timer for when my break is nearly ending. Oh, sorry for sapping up this break. I hope that isn't too
+
+Speaker 1  23:05  
+well. That's fine, my fault, my apologies. I hope I was able to answer most of your questions. Yeah.
+
+Jeffrey Fosgate  23:11  
+I mean, if you have any final thoughts, because I think once you're done with I think after just Any other final thoughts you may have, we could probably conclude this interview just any general thoughts, maybe, or maybe not even necessarily, with specific implements, but just broader ideas that might come to mind. If you don't have any, that's fine, but I'm blanking I don't have anything, that's fine.
+
+Speaker 1  23:38  
+Thank you very much. Something to add later, I might end up having, like, a Urim or eureka moment where I'm like, hey, this would be a great
+
+Jeffrey Fosgate  23:44  
+idea. Sure we can, we can possibly sit down again at some point during break. Yeah, and if anything else comes to mind, I would very much appreciate your feedback. But if nothing does come up, I
+
+Speaker 1  23:55  
+understand as well. I think a lot of the stuff I suggested is probably stuff that you might have already been told. I don't know how many other people you've
+
+Jeffrey Fosgate  24:02  
+interviewed, but no, I actually you might be the first person any of us have interviewed, because we just, we just convened as a team last Tuesday or last Tuesday and Thursday, we began actually fleshing out what our procedure for accomplishing this first portion of the task, because this is split into three different parts. Well, before I get too far into that, I'll end the recording. Thank you for your
+
+input. Let.
+
+Transcribed by https://otter.ai

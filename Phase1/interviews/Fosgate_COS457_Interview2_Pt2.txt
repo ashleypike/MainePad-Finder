@@ -1,0 +1,55 @@
+Jeffrey Fosgate  0:01  
+Okay, so my the final question I have, and you don't need to be too too elaborate that with this, if you're not thinking of anything, is just so given that description, and given some of the key features that I've elucidated that are sort of being looked for in this app preliminarily, is there anything in particular that maybe wasn't mentioned in this interview, or in any other aspect of this description that you would specifically want to see, or maybe some other aspect of it that you think ought to be honored a little bit more? In some sense,
+
+Speaker 1  0:42  
+may maybe like, like roommate notification, like, like other roommate, like, God with the other beforehand. I'm not sure, like orange or something like that, or like, or like, say, for example, and looking and looking, and then like, and then the finance ways. And then you want to like, meet. Then you want to meet with the roommates, so to speak, if you are beforehand, okay, all depends on like,
+
+Unknown Speaker  1:19  
+I don't know how I guessing, like it's hard to explain.
+
+Jeffrey Fosgate  1:29  
+No, I understand. Let me see if I can maybe unpack it a little bit. So I think by roommate notifications, because that's one phrase that you used. Does that mean a notification that you've been Match Made with a roommate, or maybe something more to the effect of you have a roommate and they're trying to chat with you or communicate with you, and maybe that
+
+Speaker 1  1:51  
+one communication is the key part of it.
+
+Jeffrey Fosgate  1:54  
+Oh, so, so the ability to communicate with the people, exactly, definitely.
+
+Speaker 1  1:58  
+Because if you don't communicate with anyone else and like, that's not gonna work too well.
+
+Jeffrey Fosgate  2:03  
+Yes, I understand that, and it seems you're also alluding to just that there should be a convenient way for you to find a roommate and then from there, be able to work together with that roommate, within perhaps this applications paradigm, exactly, to find a property that works best for both of
+
+Speaker 1  2:27  
+you, maybe like a third like you mentioned, like a third, like a third party like, within that, within the that rental properties app that You're built, that you're
+
+Jeffrey Fosgate  2:41  
+better, that's true. That's true too, because, for instance, just to briefly go over it, another person that I interviewed had a pretty interesting recommendation that maybe the process for finding roommates ought to be done in a tinder style, where they match make. And I know that sounds,
+
+Speaker 2  3:01  
+I mean, it sounds, you're not wrong. It sounds implicatory on the surface.
+
+Jeffrey Fosgate  3:08  
+It was sort of divorced from the, you know, of course, the love aspect of Tinder, this isn't about love. It's about roommates. But just to say that it should be, you should be Match Made with people based on interests and perhaps more weight is given to Yes, I agree. I agree with that. Yeah. And perhaps it should be match made based on more important aspects, also with greater weight given to those things, such as, how much can they cough up for rent, et cetera. But another important thing you've detailed is that, of course, Tinder typically only really provides service for I want to match make one person with another, so a pair two people, whereas, of course, the process of renting can be many people. It can be three people, it can be four people. So maybe just, you would recommend just having an infrastructure in place to handle that,
+
+Speaker 1  4:03  
+and depending on the size of like, the problem, that could also play another role, like, how many, how many people could like, rent to that, to that
+
+Jeffrey Fosgate  4:13  
+place, maybe, maybe another slight statistic would be, if your match made, would say three partners, it would say and say the there's, you know, 250 square feet in your property, you would say, Oh, well, you would probably be allocated, if all things were fair, 250 divided by four square feet. Just to give you a scope of this is how much you basically will have to yourself. So you'll have to weigh you know, is that really what you want as well, or maybe you have too many roommates, just just that sort of infrastructure to be able to handle, not just pairing with multiple people, not just one, as is in the case with Tinder, but also,
+
+Speaker 1  4:55  
+if it's a small place, that's not gonna work too Well, too that's not gonna work too well either,
+
+Jeffrey Fosgate  5:02  
+right? Small property, big group of people doesn't work out too well. So just it, just some implements in place for that as well. Okay, um, anything else come to mind? And again, you can just, you can say no, if nothing's really coming to mind. You've already been very thorough here, and I appreciate
+
+Speaker 1  5:21  
+that immensely. I can't think of anything else, okay,
+
+Jeffrey Fosgate  5:24  
+awesome, so I'm just gonna stop the recording here now. Thank you. Do.
+
+Transcribed by https://otter.ai
