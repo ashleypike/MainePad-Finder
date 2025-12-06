@@ -1,4 +1,6 @@
 // Author: Ashley Pike
+// Enables a user to login using their username and password
+// Receives session token from backend 
 import { useState } from "react";
 import { useSearchParams, useNavigate, replace } from "react-router-dom";
 import { AuthProvider, useAuth } from "../App.jsx";
