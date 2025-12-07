@@ -8,12 +8,12 @@
 
 import { useEffect, useState } from "react";
 
-const [profile, setProfile] = useState(null);
-const [properties, setProperties] = useState([]);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState("");
-
 export default function Profile() {
+
+  const [profile, setProfile] = useState(null);
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
   async function loadProfile() {
