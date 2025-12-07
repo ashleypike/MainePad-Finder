@@ -1,17 +1,23 @@
-// mainepadfinder-app/frontend/src/pages/Properties.jsx
+// Title: mainepadfinder-app/frontend/src/pages/Properties.jsx
+// Author: Sophia Priola
+// Properties page allows users to filter and browse rental properties in Maine 
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+// I only want to show 10 properties per page 
 const PAGE_SIZE = 10;
 
 export default function Properties() {
+  //the filters that users can set on the page 
   const [city, setCity] = useState("");
   const [minRent, setMinRent] = useState("");
   const [maxRent, setMaxRent] = useState("");
   const [minBeds, setMinBeds] = useState("");
   const [minBaths, setMinBaths] = useState("");
-  const [properties, setProperties] = useState([]);
-  const [page, setPage] = useState(1);
+
+  const [properties, setProperties] = useState([]); // this holds the property data coming from the backend 
+  const [page, setPage] = useState(1); //current number of pages 
+  // loads the error state  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,6 +45,7 @@ export default function Properties() {
     }
 
     try {
+      //call the backend endpoint to get the property data 
       const response = await fetch("https://localhost:5000/api/properties", {
         method: "POST",
         headers: {
@@ -47,9 +54,10 @@ export default function Properties() {
         credentials: "include",
         body: JSON.stringify(body),
       });
-
+      // parse the JSON response 
       const data = await response.json();
 
+      // if the response is not ok we show the error message and clear the data 
       if (!response.ok) {
         setError(data.error || `Request failed with status ${response.status}`);
         setProperties([]);
@@ -57,6 +65,7 @@ export default function Properties() {
         return;
       }
 
+      // if everything is ok we store the properties and reset to the first page 
       setProperties(data);
       setPage(1); // reset to first page on new search
     } catch (err) {
@@ -65,10 +74,12 @@ export default function Properties() {
       setProperties([]);
       setPage(1);
     } finally {
+      //turn off the loading at the end 
       setLoading(false);
     }
   }
 
+  // When the user clicks "Apply filters"
   const handleApplyFilters = (e) => {
     e.preventDefault();
     fetchProperties({ useFilters: true });
@@ -77,11 +88,13 @@ export default function Properties() {
   const handleNoFilters = (e) => {
     e.preventDefault();
 
+    //clear all filter inputs 
     setCity("");
     setMinRent("");
     setMaxRent("");
     setMinBeds("");
     setMinBaths("");
+    //reload properties with no filters 
     fetchProperties({ useFilters: false });
   };
 
@@ -92,6 +105,7 @@ export default function Properties() {
     setError("");
 
     try {
+      // call the special endpoint that uses the BEST_DEAL_PROPERTIES view
       const response = await fetch(
         "https://localhost:5000/api/properties/deals",
         {
@@ -116,6 +130,7 @@ export default function Properties() {
         return;
       }
 
+      // show the "deal" properties instead of normal search results
       setProperties(data);
       setPage(1);
     } catch (err) {
@@ -128,21 +143,24 @@ export default function Properties() {
     }
   };
 
-  const totalResults = properties.length;
-  const totalPages =
+  const totalResults = properties.length; // how many reponses we have from the backend 
+  //how many pages we need based on PAGE_SIZE 
+  const totalPages = 
     totalResults === 0 ? 1 : Math.ceil(totalResults / PAGE_SIZE);
-  const startIndex = (page - 1) * PAGE_SIZE;
-  const currentSlice = properties.slice(startIndex, startIndex + PAGE_SIZE);
+  const startIndex = (page - 1) * PAGE_SIZE; //where the current page slice starts 
+  const currentSlice = properties.slice(startIndex, startIndex + PAGE_SIZE); // the properties we actuall show on the page 
 
+  // go to previous page if we are not of first one 
   const handlePrevPage = () => {
     if (page > 1) setPage((p) => p - 1);
   };
 
+  // go to next page if there are more pags 
   const handleNextPage = () => {
     if (page < totalPages) setPage((p) => p + 1);
   };
 
-  // helper: interpret availability (your DB: 0 = available, 1 = not)
+  // helper: interpret availability (0 = available, 1 = not)
   function isAvailableFromRaw(p) {
     if (!p) return false;
 
@@ -160,7 +178,7 @@ export default function Properties() {
     }
 
     if (raw === null || raw === undefined) {
-      // scraped data with no flag → assume available so we don't hide it
+      // scraped data with no flag, we assume available so we don't hide it
       return true;
     }
 
@@ -168,6 +186,9 @@ export default function Properties() {
     return false;
   }
 
+  // Our page formatting is here and below 
+
+  // return the full properties page with filters and listings 
   return (
     <div style={{ padding: "2rem 3rem" }}>
       <h2>Browse Properties</h2>
