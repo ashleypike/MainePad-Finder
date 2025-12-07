@@ -11,15 +11,15 @@
 *Deadline: 12/6/25*  
 - Ashley: Database security & authentication  
 - Sophia: Database indexing & query optimization  
-- Jeffrey: Data warehousing/ analytics features
+- Jeffrey: Data warehousing or analytics features
 - Yunlong: Transaction management / ACID compliance
 
-### Advanced Database Feature Documentation
+### Performance Analysis & Optimization Report  
 *Deadline: 12/8/25*  
-- Ashley: Database security & authentication
-- Sophia: Performance Analysis & Optimization 
-- Jeffrey: Data warehousing/analytics  
-- Yunlong: Transaction management / ACID compliance
+- Ashley: Signup, and Login analysis  
+- Sophia: Listing, and Property analysis 
+- Jeffrey: Profile, and Matching analysis   
+- Yunlong: Manage Properties, Add Property, and Settings analysis  
 
 ### User Manual & System Documentation  
 *Deadline: 12/8/25*  
