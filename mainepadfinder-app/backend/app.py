@@ -64,19 +64,14 @@ def signup():
 
     hashedPassword = generate_password_hash(password)
 
-    parameters = (email, username, hashedPassword, phoneNumber, birthDate, displayName, gender)
-    cursor.callproc("INSERT_USER", parameters)
+    cursor.execute("SELECT USER_ID FROM USERS WHERE USERNAME = %s OR EMAIL = %s", (username, email))
+    exists = cursor.fetchone()
 
-    userID = cursor.lastrowid
-    
-    if userType == "Renter":
-        cursor.execute("INSERT INTO RENTER (USER_ID) VALUES (%s)", (userID,))
-    elif userType == "Landlord":
-        cursor.execute("INSERT INTO LANDLORD (USER_ID) VALUES (%s)", (userID,))
-    else:
-        db.rollback()
-        return jsonify({"error": "Invalid user type"}), 401
-        
+    if exists:
+        return jsonify({"error": "Failed to create user"}), 401
+
+    parameters = (email, username, hashedPassword, phoneNumber, birthDate, displayName, gender, userType)
+    cursor.callproc("INSERT_USER", parameters)
    
     db.commit()
 
@@ -105,11 +100,17 @@ def login():
     response = jsonify({"message": "Login successful"})
     response.set_cookie('token', token, expires=expiresAt, secure=True, httponly=True, samesite="None")
 
-    cursor.execute("INSERT INTO SESSIONS (TOKEN, USER_ID, CREATED_AT, EXPIRES_AT) VALUES (%s, %s, %s, %s)", (token, userID, createdAt, expiresAt))
+    parameters = (token, userID, createdAt, expiresAt)
+    cursor.callproc("INSERT_SESSION", parameters)
+
     db.commit()
 
     return response, 200
 
+
+# This function removes the session from the database
+# and removes the token from cookies when user logs out
+# Author: Ashley Pike
 @app.post("/api/logout")
 @login_required
 def logout():
@@ -123,6 +124,8 @@ def logout():
     response.set_cookie("token", "", expires=0, secure=True, httponly=True, samesite="None")
     return response, 200
 
+# This functions returns information about logged in user
+# Author: Ashley Pike
 @app.get("/api/me")
 @login_required
 def me():

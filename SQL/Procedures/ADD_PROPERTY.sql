@@ -1,3 +1,8 @@
+-- TITLE: ADD_PROPERTY
+-- AUTHOR: Ashley Pike
+-- Takes the input values and checks if the address is new and if so inserts into address table
+-- Checks if property is new and if so inserts into properties table
+
 DELIMITER $$
 
 CREATE PROCEDURE ADD_PROPERTY (

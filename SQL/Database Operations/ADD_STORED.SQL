@@ -135,7 +135,6 @@ END $$
 
 -- TITLE: INSERT_USER
 -- AUTHOR: Ashley Pike
--- DATE OF GITHUB COMMIT: 11/5/2025
 -- A simple stored procedure for inserting given values into a new user instance
 
 DELIMITER $$
@@ -149,15 +148,60 @@ CREATE PROCEDURE INSERT_USER (
     IN p_GENDER CHAR(1),
     IN p_BIRTH_DATE DATE,
     IN p_DISPLAY_NAME VARCHAR(200)
+    IN p_USER_TYPE VARCHAR(10)
     )
 BEGIN
+    DECLARE p_USER_ID INT;
+
     -- Inserting values
     INSERT INTO USERS (USERNAME, PASS_WORD, EMAIL, PHONE_NUMBER, GENDER, BIRTH_DATE, DISPLAY_NAME)
     VALUES (p_USERNAME, p_PASS_WORD, p_EMAIL, p_PHONE_NUMBER, p_GENDER, p_BIRTH_DATE, p_DISPLAY_NAME);
+
+    p_USER_ID = LAST_INSERT_ID();
+
+    IF p_USER_TYPE = "Renter" THEN
+        INSERT INTO RENTER (USER_ID)
+        VALUES (p_USER_ID)
+
+        INSERT INTO RENTER_SETTINGS (USER_ID)
+        VALUES (p_USER_ID)
+    ELSEIF p_USER_TYPE = "Landlord" THEN
+        INSERT INTO LANDLORD (USER_ID)
+        VALUES (p_USER_ID)
+    END IF;
+
+
 END$$
 
 DELIMITER ;
 
+
+-- TITLE: INSERT_SESSION
+-- AUTHOR: Ashley Pike
+-- Creates session for authentication when user logs in
+
+DELIMITER $$
+
+CREATE PROCEDURE INSERT_SESSION (
+    p_TOKEN VARCHAR(128),
+    p_USER_ID INT,
+    p_CREATED_AT DATETIME,
+    p_EXPIRES_AT DATETIME
+)
+BEGIN
+
+    -- Remove any previous sessions for this user
+    DELETE FROM SESSIONS WHERE USER_ID = p_USER_ID;
+
+    -- Remove duplicate tokens just in case
+    DELETE FROM SESSIONS WHERE TOKEN = p_TOKEN;
+
+    INSERT INTO SESSIONS (TOKEN, USER_ID, CREATED_AT, EXPIRES_AT)
+    VALUES (p_TOKEN, p_USER_ID, p_CREATED_AT, p_EXPIRES_AT);
+
+END $$
+
+DELIMITER ;
 
 
 -- TITLE: SEARCH_PROCEDURES

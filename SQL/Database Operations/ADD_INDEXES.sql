@@ -38,3 +38,9 @@ CREATE INDEX idx_property_beds_baths ON PROPERTY (BEDROOMS, BATHROOMS);
 -- Helps join PROPERTY to ADDRESS, filter by CAN_RENT and RENT_COST
 CREATE INDEX idx_property_addr_canrent_rent ON PROPERTY (ADDR_ID, CAN_RENT, RENT_COST);
 
+-- Improves performance when logging out or checking if user has previous session
+CREATE INDEX IDX_SESSIONS_USER ON SESSIONS(USER_ID);
+
+-- Improves performance when removing expired sessions
+CREATE INDEX IDX_SESSIONS_EXPIRES ON SESSIONS(EXPIRES_AT);
+
