@@ -12,8 +12,22 @@ import secrets
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins=["https://localhost:5173"])  # allows frontend to communicate with backend
+# NOTE: frontend is now http://localhost:5173 (no https)
+CORS(app, supports_credentials=True, origins=["http://localhost:5173"])  # frontend is HTTP now
+  # allows frontend to communicate with backend
 
+# Add CORS headers so the react can talk to the flask backend and send cookies 
+#Author: Sophia Priola
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
+    return response
+
+# Connects the backend to the MySQL database
+# Author: Ashley Pike
 db = mysql.connector.connect(
     host = os.getenv("DB_HOST"),
     user = os.getenv("DB_USER"),
@@ -22,30 +36,9 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
-
-def get_current_user_id():
-    row = get_current_user_row()
-    if not row:
-        return None
-    return row["USER_ID"]
-
-@app.get("/api/me")
-def get_me():
-    row = get_current_user_row()
-    if not row:
-        return jsonify({"error": "Not logged in"}), 401
-
-    return jsonify({
-        "userId": row["USER_ID"],
-        "username": row["USERNAME"],
-        "email": row.get("EMAIL"),
-    }), 200
-
+# Look up the currently logged in user based on the token cookie and the SESSIONS table
+#Author: Sophia Priola
 def get_current_user_row():
-    """
-    Look up the currently logged in user based on the 'token' cookie
-    and the SESSIONS table. Returns a row from USERS or None.
-    """
     token = request.cookies.get("token")
     if not token:
         return None
@@ -65,20 +58,16 @@ def get_current_user_row():
     row = cursor.fetchone()
     return row
 
-@app.after_request
-def add_cors_headers(response):
-    """
-    Add CORS headers so the React app at https://localhost:5173
-    can talk to the Flask backend at https://localhost:5000
-    and send cookies.
-    """
-    response.headers["Access-Control-Allow-Origin"] = "https://localhost:5173"
-    response.headers["Access-Control-Allow-Credentials"] = "true"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    response.headers["Access-Control-Allow-Methods"] = "GET,POST,OPTIONS"
-    return response
+# Gets the current user id of the user logged in
+# Author: Sophia Priola
+def get_current_user_id():
+    row = get_current_user_row()
+    if not row:
+        return None
+    return row["USER_ID"]
 
-
+# This decorator wraps a function with a check to see if the user has a valid token before proceeding
+# Author: Ashley Pike
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -100,7 +89,8 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
+# Signup allows a new user to be added to the database corresponding to the provided user data
+# Author: Ashley Pike
 @app.post("/api/signup")
 def signup():
     data = request.get_json()
@@ -115,38 +105,22 @@ def signup():
 
     hashedPassword = generate_password_hash(password)
 
-    cursor.execute(
-        "INSERT INTO USERS (USERNAME, PASS_WORD, EMAIL, PHONE_NUMBER, GENDER, BIRTH_DATE, DISPLAY_NAME) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-        (username, hashedPassword, email, phoneNumber, gender, birthDate, displayName)
-    )
+    cursor.execute("SELECT USER_ID FROM USERS WHERE USERNAME = %s OR EMAIL = %s", (username, email))
+    exists = cursor.fetchone()
 
-    userID = cursor.lastrowid
-    
-    if userType == "Renter":
-        cursor.execute("INSERT INTO RENTER (USER_ID) VALUES (%s)", (userID,))
-    elif userType == "Landlord":
-        cursor.execute("INSERT INTO LANDLORD (USER_ID) VALUES (%s)", (userID,))
-    else:
-        db.rollback()
-        return jsonify({"error": "Invalid user type"}), 401
-        
+    if exists:
+        return jsonify({"error": "Failed to create user"}), 401
+
+    parameters = (email, username, hashedPassword, phoneNumber, birthDate, displayName, gender, userType)
+    cursor.callproc("INSERT_USER", parameters)
    
     db.commit()
 
     return jsonify({"message": "User created successfully"}), 201
 
-# get_prof_details() written by Jeffrey Fosgate (December 3, 2025)
-@app.get("/api/profile")
-@login_required
-def get_prof_details():
-    cursor.execute("SELECT * FROM USERS WHERE USER_ID = %s", (g.user_id))
-    prof_details = cursor.fetchone()
-
-    if not prof_details:
-        return jsonify({"error": "Profile not found."}), 404
-    
-    return jsonify(prof_details, status=200)
-
+# This function checks supplied username and password against the database
+# and provides a session token to the user for authentication
+# Author: Ashley Pike
 @app.post("/api/login")
 def login():
     data = request.get_json()
@@ -164,38 +138,126 @@ def login():
     createdAt = datetime.now(timezone.utc)
     expiresAt = createdAt + timedelta(days=1)
 
-    resp = jsonify({"message": "Login successful"})
-    resp.set_cookie('token', token, expires=expiresAt, secure=True, httponly=True, samesite="None")
+    response = jsonify({"message": "Login successful"})
+    # dev: cookie is not secure because we are on HTTP
+    response.set_cookie(
+        "token",
+        token,
+        expires=expiresAt,
+        secure=False,          # was True
+        httponly=True,
+        samesite="Lax",        # was "None" (requires secure=True)
+    )
 
-    cursor.execute("INSERT INTO SESSIONS (TOKEN, USER_ID, CREATED_AT, EXPIRES_AT) VALUES (%s, %s, %s, %s)", (token, userID, createdAt, expiresAt))
+    parameters = (token, userID, createdAt, expiresAt)
+    cursor.callproc("INSERT_SESSION", parameters)
+
     db.commit()
 
-    return resp, 200
+    return response, 200
 
+
+# This function removes the session from the database
+# and removes the token from cookies when user logs out
+# Author: Ashley Pike
+@app.post("/api/logout")
+@login_required
+def logout():
+    token = request.cookies.get("token")
+
+    if token:
+        cursor.execute("DELETE FROM SESSIONS WHERE TOKEN = %s", (token,))
+        db.commit()
+
+    response = jsonify({"message": "Logged out"})
+    response.set_cookie(
+        "token",
+        "",
+        expires=0,
+        secure=False,          # was True
+        httponly=True,
+        samesite="Lax",
+    )
+    return response, 200
+
+# This functions returns information about logged in user
+# Author: Ashley Pike
+@app.get("/api/me")
+@login_required
+def me():
+    user_id = g.user_id
+    
+    cursor.execute(
+        "SELECT USER_ID, USERNAME, EMAIL FROM USERS WHERE USER_ID = %s",
+        (user_id,)
+    )
+    user = cursor.fetchone()
+
+    if not user:
+        return jsonify({"error": "User not found."}), 404
+
+    return jsonify({
+        "user_id": user["USER_ID"],
+        "username": user["USERNAME"],
+        "email": user["EMAIL"]
+    }), 200
+
+# Retrieves all profile details pertaining to the user of the account currently logged in.
+# If no user is logged in, redirect to login page in accordance with @login_required
+# Author: Jeffrey Fosgate (December 3, 2025 -- Updated December 7, 2025)
+@app.get("/api/profile")
+@login_required
+def get_prof_details():
+    cursor.execute("SELECT EMAIL, PHONE_NUMBER, GENDER, USER_DESC, PICTURE_URL, DISPLAY_NAME FROM USERS WHERE USER_ID = %s", (g.user_id,))
+    prof_details = cursor.fetchone()
+
+    if not prof_details:
+        return jsonify({"error": "Profile not found."}), 404
+
+    cursor.execute("SELECT USER_ID FROM LANDLORD WHERE USER_ID = %s", (g.user_id,))
+    isLandlord = cursor.fetchone()
+    prof_details["IS_LANDLORD"] = True if isLandlord else False
+    
+    return jsonify(prof_details), 200
+
+# Retrieves all properties belonging to the person currently logged in.
+# Author: Jeffrey Fosgate (December 7, 2025)
+@app.get("/api/profile/properties")
+@login_required
+def get_my_properties():
+    cursor.execute("SELECT * FROM PROPERTY WHERE LANDLORD_ID = %s", (g.user_id,))
+    my_properties = cursor.fetchall()
+    return jsonify(my_properties), 200
+
+# Is the chosen property (prop_id) trending UP (0) or DOWN (1)? Return (-1) if this cannot be discerned due to insufficient data.
+# Author: Jeffrey Fosgate (December 6, 2025)
+def prop_price_trending(prop_id):
+    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", prop_id)
+    prop_hist_data = cursor.fetchall()
+    if len(prop_hist_data) < 2:
+        return -1
+    elif prop_hist_data[0] > prop_hist_data[1]: # If this property's most recent price is higher than it was before...
+        return 0
+    else:
+        return 1
+    
+
+# This function retrieves property listings from the database, joining with address information
+# and applying filters based on the request body.
+# Author: Sophia Priola
 @app.post("/api/properties")
 def get_properties():
-    """
-    Return property listings joined with ADDRESS, filtered in SQL.
-    Expects body like:
-    {
-        "city": "Portland",
-        "minRent": 1000,
-        "maxRent": 2500,
-        "minBeds": 2,
-        "minBaths": 1
-    }
-    All of the keys are optional
-    """
     try:
         data = request.get_json(silent=True) or {}
 
+        # All keys are optional allows us to filter by any combination of these 
         city = data.get("city")
         min_rent = data.get("minRent")
         max_rent = data.get("maxRent")
         min_beds = data.get("minBeds")
         min_baths = data.get("minBaths")
 
-        # Base query: join PROPERTY + ADDRESS, then add WHERE conditions as needed
+        # Base query: join PROPERTY + ADDRESS, we add the WHERE condition when needed 
         sql = """
             SELECT 
                 P.PROPERTY_ID,
@@ -262,12 +324,10 @@ def get_properties():
                 "sqft": row["SQFT"],
                 "city": row["CITY"],
                 "state": row["STATE_CODE"],
-
                 "addressLine1": row["STREET"],
                 "addressLine2": None,         
                 "zipCode": row["ZIPCODE"],
-    })
-          
+            })
 
         return jsonify(properties), 200
 
@@ -275,6 +335,9 @@ def get_properties():
         print("Error in /api/properties:", e)
         return jsonify({"error": "Failed to load properties"}), 500
     
+
+# This function retrieves a single property listing along with its landlord information
+# Author: Sophia Priola
 @app.get("/api/listing/<int:property_id>")
 def get_listing_with_landlord(property_id):
     try:
@@ -299,9 +362,7 @@ def get_listing_with_landlord(property_id):
             "city": row["CITY"],
             "state": row["STATE_CODE"],
             "zip": row.get("ZIP_CODE"),
-
             "avgRating": row.get("AVG_RATING"),
-
             "landlordName": row.get("LANDLORD_NAME"),
             "landlordEmail": row.get("LANDLORD_EMAIL"),
             "landlordPhone": row.get("LANDLORD_PHONE"),
@@ -309,11 +370,14 @@ def get_listing_with_landlord(property_id):
 
         return jsonify(result), 200
 
+    # If there are errors we print the error message 
     except Exception as e:
         print("Error in /api/listing/<id>:", e)
         return jsonify({"error": "Failed to load listing"}), 500
 
-    
+
+# This function retrieves 'best deal' properties from the BEST_DEAL_PROPERTIES view
+# Author: Sophia Priola 
 @app.route("/api/properties/deals", methods=["POST"])
 def get_property_deals():
     """
@@ -384,6 +448,9 @@ def get_property_deals():
         print("Error in /api/properties/deals:", e)
         return jsonify({"error": "Failed to load best deals"}), 500
 
+# Create or update a review for a single property by the logged-in user.
+# Uses the REVIEW table and enforces stars 1–5.
+# Author: Sophia Priola
 @app.post("/api/listing/<int:property_id>/review")
 @login_required
 def create_or_update_review(property_id):
@@ -426,6 +493,7 @@ def create_or_update_review(property_id):
         return jsonify({"error": "Failed to save review"}), 500
     
 # Return a conersation between the logged-in user and another user 
+# Author: Sophia Priola
 @app.get("/api/messages/thread")
 @login_required
 def get_message_thread():
@@ -484,7 +552,8 @@ def get_message_thread():
 
     return jsonify(messages), 200
 
-
+# This endpoint allows the logged-in user to send a message to another user
+# Author: Sophia Priola
 @app.post("/api/messages/send")
 @login_required
 def send_message():
@@ -522,21 +591,14 @@ def send_message():
 
     return jsonify({"message": "Message sent"}), 201
 
+# Author: Ashley Pike
+# Arguments for running app.py
 if __name__ == "__main__":
-    
-    ssl_cert = os.getenv("SSL_CERT_PATH")
-    ssl_key = os.getenv("SSL_KEY_PATH")
+    app.run(
+        host="localhost",
+        port=5000,
+        debug=True,   # no ssl_context here in dev
+    )
 
-    if ssl_cert and ssl_key and os.path.exists(ssl_cert) and os.path.exists(ssl_key):
-        print(f" Starting HTTPS backend on https://localhost:5000")
-        app.run(
-            host="localhost",
-            port=5000,
-            ssl_context=(ssl_cert, ssl_key),
-            debug=True,
-        )
-    else:
-        print("SSL cert/key missing")
-        
         
 
