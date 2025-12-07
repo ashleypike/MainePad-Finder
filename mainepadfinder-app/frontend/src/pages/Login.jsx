@@ -14,7 +14,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const redirectTo = params.get("redirect") ? decodeURIComponent(params.get("redirect")) : "/home";
+  const redirectTo = params.get("redirect") ? decodeURIComponent(params.get("redirect")) : "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
