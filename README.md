@@ -80,7 +80,7 @@ npm run dev
    * The backend enables CORS for http://localhost:5173 and allows credentials so that cookies and sessions can be used if needed
 ## How To Use Properties Page
 **1. Open the page**
-* Navigate to the Properties page in the React app (e.g. click “Search Properties” in the navigation bar).
+* Navigate to the Properties page in the React app
 
 **2. Set filters (this is optional)**
 * City (e.g., Portland)
