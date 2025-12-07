@@ -22,6 +22,10 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
+""" Returns the user ID of the currently logged-in user"""
+def get_current_user_id():
+    return session.get("user_id")
+
 
 def login_required(f):
     @wraps(f)
@@ -368,7 +372,133 @@ def create_or_update_review(property_id):
     except Exception as e:
         print("Error in /api/listing/<id>/review:", e)
         return jsonify({"error": "Failed to save review"}), 500
+    
+@app.get("/api/me")
+def api_me():
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"error": "Not logged in"}), 401
+    return jsonify({"userId": user_id}), 200
 
+# Return a conersation between the logged-in user and another user 
+@app.get("/api/messages/thread")
+def get_message_thread():
+
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"error": "Not logged in"}), 401
+
+    username = request.args.get("username", type=str)
+    if not username:
+        return jsonify({"error": "Missing username parameter"}), 400
+
+    try:
+        # Look up the other user by username
+        cursor.execute(
+            """
+            SELECT USER_ID, USERNAME
+            FROM USERS
+            WHERE USERNAME = %s
+            """,
+            (username,),
+        )
+        other = cursor.fetchone()
+        if not other:
+            return jsonify({"error": "User not found"}), 404
+
+        other_user_id = other["USER_ID"]
+
+        # Get all messages between current user and other user
+        cursor.execute(
+            """
+            SELECT 
+                M.MSG_ID,
+                M.SENDER_ID,
+                M.RECIPIENT_ID,
+                M.TIME_STAMP,
+                M.MESSAGE_TEXTS,
+                S.USERNAME AS SENDER_USERNAME,
+                R.USERNAME AS RECIPIENT_USERNAME,
+                M.IS_READ
+            FROM MESSAGE AS M
+            JOIN USERS AS S ON M.SENDER_ID = S.USER_ID
+            JOIN USERS AS R ON M.RECIPIENT_ID = R.USER_ID
+            WHERE
+                (M.SENDER_ID = %s AND M.RECIPIENT_ID = %s)
+                OR
+                (M.SENDER_ID = %s AND M.RECIPIENT_ID = %s)
+            ORDER BY M.TIME_STAMP ASC
+            """,
+            (user_id, other_user_id, other_user_id, user_id),
+        )
+        rows = cursor.fetchall()
+
+        messages = []
+        for row in rows:
+            messages.append({
+                "MSG_ID": row["MSG_ID"],
+                "senderId": row["SENDER_ID"],
+                "recipientId": row["RECIPIENT_ID"],
+                "TIME_STAMP": row["TIME_STAMP"].isoformat()
+                    if row["TIME_STAMP"] is not None else None,
+                "MESSAGE_TEXTS": row["MESSAGE_TEXTS"],
+                "senderUsername": row["SENDER_USERNAME"],
+                "recipientUsername": row["RECIPIENT_USERNAME"],
+                "isRead": bool(row["IS_READ"]),
+            })
+
+        return jsonify(messages), 200
+
+    except Exception as e:
+        print("Error in /api/messages/thread:", e)
+        return jsonify({"error": "Failed to load conversation"}), 500
+    
+    #Send a message from the logged-in user to another user by username 
+    #This uses the SEND_MESSAGE stored procedur 
+@app.post("/api/messages/send")
+def send_message():
+    user_id = get_current_user_id()
+    if not user_id:
+        return jsonify({"error": "Not logged in"}), 401
+
+    data = request.get_json(silent=True) or {}
+    recipient_username = (data.get("recipientUsername") or "").strip()
+    message_text = (data.get("messageText") or "").strip()
+
+    if not recipient_username:
+        return jsonify({"error": "Recipient username is required"}), 400
+    if not message_text:
+        return jsonify({"error": "Message text is required"}), 400
+
+    try:
+        # Look up the recipient by username
+        cursor.execute(
+            """
+            SELECT USER_ID, USERNAME
+            FROM USERS
+            WHERE USERNAME = %s
+            """,
+            (recipient_username,),
+        )
+        recipient = cursor.fetchone()
+        if not recipient:
+            return jsonify({"error": "Recipient not found"}), 404
+
+        recipient_id = recipient["USER_ID"]
+
+        # Call the stored procedure SEND_MESSAGE(sender, recipient, message_text)
+        cursor.execute(
+            "CALL SEND_MESSAGE(%s, %s, %s)",
+            (user_id, recipient_id, message_text),
+        )
+        db.commit()
+
+        return jsonify({"message": "Message sent"}), 201
+
+    except Exception as e:
+        print("Error in /api/messages/send:", e)
+        db.rollback()
+        return jsonify({"error": "Failed to send message"}), 500
 
 
 if __name__ == "__main__":
