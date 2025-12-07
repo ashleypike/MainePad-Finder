@@ -86,5 +86,5 @@ mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Databa
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_INDEXES.sql"
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_STORED.sql"
 
-python3 "./Web Scraping/Sample Data/add_property.py"
+py -m "./Web Scraping/Sample Data/add_property.py"
 echo "CSV import completed successfully."
