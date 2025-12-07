@@ -76,7 +76,6 @@ The properties page assumes the following services are running:
 npm install
 npm run dev
 ```
-   * The app should render the Properties page at its configured route (e.g. /properties or your home page, depending on your router)
 * **CORS/COOKIES**
    * The backend enables CORS for http://localhost:5173 and allows credentials so that cookies and sessions can be used if needed
 ## How To Use Properties Page
