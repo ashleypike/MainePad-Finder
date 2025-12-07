@@ -146,19 +146,32 @@ def me():
         "email": user["EMAIL"]
     }), 200
 
-# This profile retrieves all profile details pertaining to the user of the account currently logged in.
+# Retrieves all profile details pertaining to the user of the account currently logged in.
 # If no user is logged in, redirect to login page in accordance with @login_required
-# Author: Jeffrey Fosgate (December 3, 2025 -- Updated December 6, 2025)
+# Author: Jeffrey Fosgate (December 3, 2025 -- Updated December 7, 2025)
 @app.get("/api/profile")
 @login_required
 def get_prof_details():
-    cursor.execute("SELECT * FROM USERS WHERE USER_ID = %s", (g.user_id,))
+    cursor.execute("SELECT EMAIL, PHONE_NUMBER, GENDER, USER_DESC, PICTURE_URL, DISPLAY_NAME FROM USERS WHERE USER_ID = %s", (g.user_id,))
     prof_details = cursor.fetchone()
 
     if not prof_details:
         return jsonify({"error": "Profile not found."}), 404
+
+    cursor.execute("SELECT USER_ID FROM LANDLORD WHERE USER_ID = %s", (g.user_id,))
+    isLandlord = cursor.fetchone()
+    prof_details["IS_LANDLORD"] = True if isLandlord else False
     
-    return jsonify(prof_details, status=200)
+    return jsonify(prof_details), 200
+
+# Retrieves all properties belonging to the person currently logged in.
+# Author: Jeffrey Fosgate (December 7, 2025)
+@app.get("/api/profile/properties")
+@login_required
+def get_my_properties():
+    cursor.execute("SELECT * FROM PROPERTY WHERE LANDLORD_ID = %s", (g.user_id,))
+    my_properties = cursor.fetchall()
+    return jsonify(my_properties), 200
 
 # Is the chosen property (prop_id) trending UP (0) or DOWN (1)? Return (-1) if this cannot be discerned due to insufficient data.
 # Author: Jeffrey Fosgate (December 6, 2025)
