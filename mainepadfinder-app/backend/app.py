@@ -20,11 +20,10 @@ db = mysql.connector.connect(
     host = os.getenv("DB_HOST"),
     user = os.getenv("DB_USER"),
     password = os.getenv("DB_PASSWORD"),
-    database = os.getenv("DB_NAME"),
-    ssl_ca = os.getenv("CA_PATH"),
-    ssl_cert = os.getenv("DATABASE_CERT_PATH"),
-    ssl_key = os.getenv("DATABASE_KEY_PATH"),
-    ssl_mode = "REQUIRED"
+    database = os.getenv("DB_NAME") #,
+    ##ssl_ca = os.getenv("CA_PATH"),
+    ##ssl_cert = os.getenv("DATABASE_CERT_PATH"),
+    ##ssl_key = os.getenv("DATABASE_KEY_PATH")
 )
 cursor = db.cursor(dictionary=True)
 
@@ -56,13 +55,13 @@ def login_required(f):
 @app.post("/api/signup")
 def signup():
     data = request.get_json()
-    email = data["email"]
     username = data["username"]
     password = data["password"]
+    email = data["email"]
     phoneNumber = data["phoneNumber"]
+    gender = data["gender"]
     birthDate = data["birthDate"]
     displayName = data["displayName"]
-    gender = data["gender"]
     userType = data["userType"]
 
     hashedPassword = generate_password_hash(password)
@@ -73,7 +72,7 @@ def signup():
     if exists:
         return jsonify({"error": "Failed to create user"}), 401
 
-    parameters = (email, username, hashedPassword, phoneNumber, birthDate, displayName, gender, userType)
+    parameters = (username, hashedPassword, email, phoneNumber, gender, birthDate, displayName, userType)
     cursor.callproc("INSERT_USER", parameters)
    
     db.commit()
