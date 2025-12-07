@@ -11,7 +11,7 @@ cd mainepadfinder-app
 # --- Setup Python virtual environment for backend ---
 echo "Setting up Python virtual environment for backend..."
 cd backend
-py venv venv
+py -m venv venv
 
 # Activate venv
 source venv/Scripts/activate
