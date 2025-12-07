@@ -65,19 +65,19 @@ The Properties page is the main search interface for MainePad-Finder. It lets us
 ## Prerequisites and Setup
 The properties page assumes the following services are running:
 * **Backend Flask API**
-   * Base URL: http://localhost:5000
-   * Endpoints used: POST /api/properties and POST /api/property/deals
-   * Environment details configured: DB_HOST, DB_USER, DB_PASSWORD, DB_NAME
-   * MySQL database contains: PROPERTY and ADDRESS tables, BEST_DEAL_PROPERTIES view
+   * Base URL: `http://localhost:5000`
+   * Endpoints used: `POST /api/properties` and `POST /api/property/deals`
+   * Environment details configured: `DB_HOST, DB_USER, DB_PASSWORD, DB_NAME`
+   * MySQL database contains: `PROPERTY` and `ADDRESS` tables, `BEST_DEAL_PROPERTIES` view
 * **Frontend React and Vite**
-  * Base URL: http://localhost:5173
+  * Base URL: `http://localhost:5173`
   * Start with 
 ```
 npm install
 npm run dev
 ```
 * **CORS/COOKIES**
-   * The backend enables CORS for http://localhost:5173 and allows credentials so that cookies and sessions can be used if needed
+   * The backend enables CORS for `http://localhost:5173` and allows credentials so that cookies and sessions can be used if needed
 ## How To Use Properties Page
 **1. Open the page**
 * Navigate to the Properties page in the React app
@@ -91,12 +91,93 @@ npm run dev
 * Click the "Apply filters", "No filters" or "Find me deals!" button depending on what you're looking for
 * This sends a request with null filters so the backend can return a broader set of properties.
 
-**4. View the best deals**
-* Optionally click "Find me deals!" to call POST /api/properties/deals
-* This shows all properties below the average rent in a given city
+**4. Pagination**
+* Only 10 properties per page
+* Use Next/Previous page controls to navigate through the result set
 
-**5. Click a property to bring you to the listing page**
-* Click on a property you are interested in to give more specifications such as landlord, reviews and more on the listing page
+**5. View the best deals**
+* Optionally click "Find me deals!" to call `POST /api/properties/deals`
+* This shows all properties below the average rent in a given city
+* Matching properties are displayed as clickable cards
+   * Click a property and it will give you specifications about that listing
+
+## API Documentation
+
+### `POST /api/properties`
+
+**Description:**
+Return a list of properties matching the optional filter criteria
+
+**Request body**
+```
+{
+  "city": "Portland",     // optional, substring match on A.CITY
+  "minRent": 800,         // optional, minimum rent
+  "maxRent": 1800,        // optional, maximum rent
+  "minBeds": 1,           // optional, minimum number of bedrooms
+  "minBaths": 1           // optional, minimum number of bathrooms
+}
+```
+All fields are optional. Missing or null fields are simply ignored
+
+**Response body**
+```
+[
+  {
+    "id": 123,
+    "title": "2 bed • 1 bath",   // or UNIT_LABEL from DB if present
+    "rent": 1500,
+    "beds": 2,
+    "baths": 1,
+    "canRent": true,
+    "sqft": 900,
+    "city": "Portland",
+    "state": "ME",
+    "addressLine1": "123 Main St",
+    "addressLine2": null,
+    "zipCode": "04101"
+  }
+]
+```
+An array of property objects shaped for the frontend
+
+### `POST /api/property/deals`
+
+**Description:** Return “best deal” properties based on how low their rent is relative to the city average
+
+**Request body**
+```
+{
+  "city": "Portland"    // optional, filter deals to a given city
+}
+```
+If city is omitted or null, the endpoint will return deals across all cities
+
+**Response body**
+```
+[
+  {
+    "id": 456,
+    "title": "Studio • 1 bath",
+    "rent": 900,
+    "beds": 0,
+    "baths": 1,
+    "canRent": true,
+    "sqft": 450,
+    "city": "Portland",
+    "state": "ME",
+    "cityAvgRent": 1300,
+    "rentPctOfCityAvg": 0.69
+  }
+]
+```
+Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
+
+
+
+
+
+
 
 
 
