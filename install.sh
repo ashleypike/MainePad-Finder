@@ -18,7 +18,7 @@ source venv/Scripts/activate
 
 # Install backend dependencies inside venv
 echo "Installing backend dependencies..."
-pip install --upgrade pip
+# pip install --upgrade pip
 pip install -r requirements.txt
 
 # Deactivate venv
@@ -50,16 +50,22 @@ else
     echo "mkcert already installed."
 fi
 
+
+CERT_DIR="./certs"
+mkdir -p "$CERT_DIR"
+cd certs
+
 # --- Install local CA ---
 mkcert -install
 
 # --- Generate certificates ---
-CERT_DIR="./certs"
-mkdir -p "$CERT_DIR"
 echo "Generating local HTTPS certificates for localhost and 127.0.0.1..."
-mkcert -cert-file "$CERT_DIR/server.crt" -key-file "$CERT_DIR/server.key" localhost 127.0.0.1
+mkcert -cert-file "frontend.crt" -key-file "frontend.key" localhost 127.0.0.1
+mkcert -cert-file "backend.crt" -key-file "backend.key" localhost 127.0.0.1
+mkcert -cert-file "database.crt" -key-file "database.key" localhost 127.0.0.1
 
-echo "Certificates generated at $CERT_DIR/server.crt and $CERT_DIR/server.key"
+echo "Certificates generated at $CERT_DIR"
+cd ..
 
 
 
@@ -73,7 +79,7 @@ fi
 
 # Start MySQL service
 echo "Starting MySQL service..."
-net start MySQL || echo "MySQL service already running"
+net start MySQL80 || echo "MySQL service already running"
 
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < "./SQL/Database Operations/CREATE_DATABASE.sql"
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ALL_TABLE.sql"
@@ -82,5 +88,3 @@ mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Databa
 
 python3 "./Web Scraping/Sample Data/add_property.py"
 echo "CSV import completed successfully."
-
-

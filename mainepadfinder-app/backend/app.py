@@ -6,7 +6,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
 import mysql.connector
-import re
 import secrets
 
 load_dotenv()
@@ -21,7 +20,11 @@ db = mysql.connector.connect(
     host = os.getenv("DB_HOST"),
     user = os.getenv("DB_USER"),
     password = os.getenv("DB_PASSWORD"),
-    database = os.getenv("DB_NAME")
+    database = os.getenv("DB_NAME"),
+    ssl_ca = os.getenv("CA_PATH"),
+    ssl_cert = os.getenv("DATABASE_CERT_PATH"),
+    ssl_key = os.getenv("DATABASE_KEY_PATH"),
+    ssl_mode = "REQUIRED"
 )
 cursor = db.cursor(dictionary=True)
 
@@ -176,7 +179,7 @@ def get_my_properties():
 # Is the chosen property (prop_id) trending UP (0) or DOWN (1)? Return (-1) if this cannot be discerned due to insufficient data.
 # Author: Jeffrey Fosgate (December 6, 2025)
 def prop_price_trending(prop_id):
-    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", prop_id)
+    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", (prop_id,))
     prop_hist_data = cursor.fetchall()
     if len(prop_hist_data) < 2:
         return -1
@@ -185,12 +188,13 @@ def prop_price_trending(prop_id):
     else:
         return 1
 
-# Author: Ashley Pike
+
 # Arguments for running app.py
+# Author: Ashley Pike
 if __name__ == "__main__":
     app.run(
         host='localhost',
         port=5000,
-        ssl_context=(os.getenv('SSL_CERT_PATH'), os.getenv('SSL_KEY_PATH')),
+        ssl_context=(os.getenv('FRONTEND_CERT_PATH'), os.getenv('FRONTEND_KEY_PATH')),
         debug=True
     )
