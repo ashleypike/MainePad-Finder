@@ -1,101 +1,127 @@
 // mainepadfinder-app/frontend/src/pages/Messages.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Messages() {
-  const [recipientUsername, setRecipientUsername] = useState("");
-  const [messageText, setMessageText] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const [userError, setUserError] = useState("");
 
-  const [sending, setSending] = useState(false);
-  const [sendError, setSendError] = useState("");
-  const [sendMessage, setSendMessage] = useState("");
-
+  const [otherUsername, setOtherUsername] = useState("");
   const [messages, setMessages] = useState([]);
   const [loadingThread, setLoadingThread] = useState(false);
   const [threadError, setThreadError] = useState("");
+
+  const [messageText, setMessageText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState("");
+  const [sendSuccess, setSendSuccess] = useState("");
+
+  // check who is logged in
+  useEffect(() => {
+    async function loadMe() {
+      setLoadingUser(true);
+      setUserError("");
+      try {
+        const response = await fetch("https://localhost:5000/api/me", {
+          credentials: "include",
+        });
+
+        if (response.status === 401) {
+          setCurrentUser(null);
+        } else {
+          const data = await response.json();
+          setCurrentUser(data);
+        }
+      } catch (err) {
+        console.error("Error loading /api/me:", err);
+        setUserError("Could not check login status.");
+      } finally {
+        setLoadingUser(false);
+      }
+    }
+
+    loadMe();
+  }, []);
 
   async function handleLoadThread(e) {
     e.preventDefault();
     setThreadError("");
     setMessages([]);
 
-    const username = recipientUsername.trim();
-    if (!username) {
-      setThreadError("Please enter a username first.");
+    if (!otherUsername.trim()) {
+      setThreadError("Please enter a username.");
       return;
     }
 
+    setLoadingThread(true);
     try {
-      setLoadingThread(true);
+      const url = new URL("https://localhost:5000/api/messages/thread");
+      url.searchParams.set("otherUsername", otherUsername.trim());
 
-      // GET conversation with this username
-      const res = await fetch(
-        `https://localhost:5000/api/messages/thread?username=${encodeURIComponent(
-          username
-        )}`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
-      );
+      const response = await fetch(url.toString(), {
+        method: "GET",
+        credentials: "include",
+      });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok) {
-        setThreadError(data.error || "Failed to load conversation.");
-        return;
+      if (!response.ok) {
+        setThreadError(data.error || "Could not load messages.");
+        setMessages([]);
+      } else {
+        setMessages(data);
       }
-
-      setMessages(data);
     } catch (err) {
-      console.error("Error loading conversation:", err);
-      setThreadError("Network error while loading conversation.");
+      console.error("Error loading messages thread:", err);
+      setThreadError("Network error while loading messages.");
+      setMessages([]);
     } finally {
       setLoadingThread(false);
     }
   }
 
-  async function handleSend(e) {
+  async function handleSendMessage(e) {
     e.preventDefault();
     setSendError("");
-    setSendMessage("");
+    setSendSuccess("");
 
-    const username = recipientUsername.trim();
-    if (!username) {
-      setSendError("Please enter a recipient username.");
+    if (!otherUsername.trim()) {
+      setSendError("Please enter a username to message.");
       return;
     }
     if (!messageText.trim()) {
-      setSendError("Message text cannot be empty.");
+      setSendError("Please enter a message.");
       return;
     }
 
+    setSending(true);
     try {
-      setSending(true);
+      const response = await fetch(
+        "https://localhost:5000/api/messages/send",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            otherUsername: otherUsername.trim(),
+            text: messageText,
+          }),
+        }
+      );
 
-      const res = await fetch("https://localhost:5000/api/messages/send", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          recipientUsername: username,
-          messageText,
-        }),
-      });
+      const data = await response.json();
 
-      const data = await res.json();
+      if (!response.ok) {
+        setSendError(data.error || "Could not send message.");
+      } else {
+        setSendSuccess("Message sent.");
+        setMessageText("");
 
-      if (!res.ok) {
-        setSendError(data.error || "Failed to send message.");
-        return;
+        // refresh the thread so the new message shows up
+        await handleLoadThread(new Event("submit"));
       }
-
-      setSendMessage("Message sent!");
-
-      // Optionally refresh the thread after sending
-      setMessageText("");
-      await handleLoadThread(new Event("submit"));
     } catch (err) {
       console.error("Error sending message:", err);
       setSendError("Network error while sending message.");
@@ -104,14 +130,40 @@ export default function Messages() {
     }
   }
 
+  if (loadingUser) {
+    return (
+      <div style={{ padding: "2rem 3rem" }}>
+        <h2>Messages</h2>
+        <p>Checking login status...</p>
+      </div>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <div style={{ padding: "2rem 3rem" }}>
+        <h2>Messages</h2>
+        {userError && (
+          <p style={{ color: "red", marginBottom: "0.75rem" }}>{userError}</p>
+        )}
+        <p style={{ maxWidth: "520px" }}>
+          You need to be logged in to view and send messages. Please log in and
+          then come back to this page.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: "2rem 3rem" }}>
       <h2>Messages</h2>
-      <p style={{ maxWidth: "640px" }}>
-        Send messages between users by looking them up with their username.
+      <p style={{ maxWidth: "620px" }}>
+        You are logged in as <strong>{currentUser.username}</strong>. Enter
+        another user&apos;s username to view your conversation history and send
+        messages.
       </p>
 
-      {/* Form for choosing recipient + loading conversation */}
+      {/* Choose who to talk to */}
       <form
         onSubmit={handleLoadThread}
         style={{
@@ -123,13 +175,13 @@ export default function Messages() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <label htmlFor="recipientUsername">Recipient username</label>
+          <label htmlFor="otherUsername">Other username</label>
           <input
-            id="recipientUsername"
+            id="otherUsername"
             type="text"
-            value={recipientUsername}
-            onChange={(e) => setRecipientUsername(e.target.value)}
-            placeholder="e.g., sophia123"
+            value={otherUsername}
+            onChange={(e) => setOtherUsername(e.target.value)}
+            placeholder="Enter username"
           />
         </div>
 
@@ -139,27 +191,81 @@ export default function Messages() {
       </form>
 
       {threadError && (
-        <p style={{ color: "red", marginBottom: "0.5rem" }}>{threadError}</p>
+        <p style={{ color: "red", marginBottom: "0.75rem" }}>{threadError}</p>
       )}
 
-      {/* Send message form */}
-      <form
-        onSubmit={handleSend}
+      {/* Messages list */}
+      <div
         style={{
-          margin: "1rem 0 1.5rem 0",
+          border: "1px solid #e5e7eb",
+          borderRadius: "8px",
+          padding: "1rem",
+          minHeight: "180px",
+          maxHeight: "360px",
+          overflowY: "auto",
+          marginBottom: "1rem",
+          background: "#fafafa",
+        }}
+      >
+        {messages.length === 0 ? (
+          <p style={{ color: "#666" }}>No messages to show yet.</p>
+        ) : (
+          messages.map((m) => {
+            const mine = m.isMine;
+            return (
+              <div
+                key={m.msgId}
+                style={{
+                  display: "flex",
+                  justifyContent: mine ? "flex-end" : "flex-start",
+                  marginBottom: "0.5rem",
+                }}
+              >
+                <div
+                  style={{
+                    maxWidth: "70%",
+                    padding: "0.5rem 0.75rem",
+                    borderRadius: "12px",
+                    background: mine ? "#dbeafe" : "#e5e7eb",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  <div style={{ marginBottom: "0.25rem" }}>
+                    <strong>{mine ? "You" : m.senderUsername}</strong>
+                  </div>
+                  <div>{m.text}</div>
+                  <div
+                    style={{
+                      marginTop: "0.25rem",
+                      fontSize: "0.75rem",
+                      color: "#555",
+                    }}
+                  >
+                    {m.sentAt}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Send a new message */}
+      <form
+        onSubmit={handleSendMessage}
+        style={{
           display: "flex",
           flexDirection: "column",
           gap: "0.5rem",
           maxWidth: "480px",
         }}
       >
-        <label htmlFor="messageText">
-          Message
+        <label>
+          Message:
           <textarea
-            id="messageText"
-            rows={3}
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
+            rows={3}
             style={{ width: "100%", marginTop: "0.25rem" }}
           />
         </label>
@@ -171,56 +277,10 @@ export default function Messages() {
         {sendError && (
           <p style={{ color: "red", fontSize: "0.9rem" }}>{sendError}</p>
         )}
-        {sendMessage && (
-          <p style={{ color: "green", fontSize: "0.9rem" }}>{sendMessage}</p>
+        {sendSuccess && (
+          <p style={{ color: "green", fontSize: "0.9rem" }}>{sendSuccess}</p>
         )}
       </form>
-
-      {/* Messages list */}
-      <div
-        style={{
-          border: "1px solid #e5e7eb",
-          borderRadius: "8px",
-          padding: "1rem",
-          maxWidth: "720px",
-          maxHeight: "380px",
-          overflowY: "auto",
-          background: "#fafafa",
-        }}
-      >
-        {messages.length === 0 ? (
-          <p style={{ color: "#666" }}>
-            No messages to show yet. Load a conversation or send a message.
-          </p>
-        ) : (
-          <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-            {messages.map((m) => (
-              <li
-                key={m.MSG_ID ?? m.id}
-                style={{
-                  marginBottom: "0.75rem",
-                  paddingBottom: "0.5rem",
-                  borderBottom: "1px solid #e5e7eb",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "#555",
-                    marginBottom: "0.15rem",
-                  }}
-                >
-                  <strong>{m.senderUsername || m.SENDER_USERNAME}</strong>{" "}
-                  →{" "}
-                  <strong>{m.recipientUsername || m.RECIPIENT_USERNAME}</strong>{" "}
-                  • {m.TIME_STAMP || m.timestamp}
-                </div>
-                <div>{m.MESSAGE_TEXTS || m.messageText}</div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
     </div>
   );
 }
