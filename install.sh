@@ -11,7 +11,7 @@ cd mainepadfinder-app
 # --- Setup Python virtual environment for backend ---
 echo "Setting up Python virtual environment for backend..."
 cd backend
-py -m venv venv
+py venv venv
 
 # Activate venv
 source venv/Scripts/activate
@@ -86,5 +86,5 @@ mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Databa
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_INDEXES.sql"
 mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_STORED.sql"
 
-py -m "./Web Scraping/Sample Data/add_property.py"
+py "./Web Scraping/Sample Data/add_property.py"
 echo "CSV import completed successfully."
