@@ -38,6 +38,6 @@
 ### In-Class Presentation  
 *Deadline: 12/8/25*  
 - Ashley: Key features   
-- Sophia: Overview  
+- Sophia: System architecture  
 - Jeffrey: Lessons learned  
 - Yunlong: Key features  
