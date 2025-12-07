@@ -1,17 +1,19 @@
-// mainepadfinder-app/frontend/src/pages/Listing.jsx
+// Title: mainepadfinder-app/frontend/src/pages/Listing.jsx
+// Author: Sophia Priola
+// Listing page shows details for a single property with the ability to leave a review
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 
 export default function Listing() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { id } = useParams(); // /listing/:id
+  const location = useLocation(); //useLocation let us read the property data passed in through Propertie.jsx
+  const navigate = useNavigate(); //useNavigate lets us move the user back and forth between pages 
+  const { id } = useParams(); // useParams grabs the id part from the URL  
 
-  const property = location.state?.property || null;
-  const allProperties = location.state?.allProperties || null;
+  const property = location.state?.property || null; //listing is the one clicked on from the Properties.jsx page 
+  const allProperties = location.state?.allProperties || null; //allProperties holds the whole list so we can use next and prev
 
   // Interpret availability CAN_RENT = available 
-  function isAvailableFromRaw(p) {
+  function isAvailableFromRaw(p) { 
     if (!p) return false;
 
     const raw = "canRent" in p ? p.canRent : p.CAN_RENT;
@@ -33,6 +35,7 @@ export default function Listing() {
     return false;
   }
 
+  // formats bedroom count into a string 
   function formatBedsDetail(beds) {
     if (beds === 0) return "Studio";
     if (beds == null) return "Unknown";
@@ -41,6 +44,7 @@ export default function Listing() {
   }
 
   // Normalize everything we care about
+  // This takes whatever structure the property object has and makes a clean, consistent object
   function normalize(p) {
     if (!p) return null;
     const available = isAvailableFromRaw(p);
@@ -77,13 +81,14 @@ export default function Listing() {
       landlordName: p.landlordName ?? p.LANDLORD_NAME ?? null,
       landlordEmail: p.landlordEmail ?? p.LANDLORD_EMAIL ?? null,
 
-      // average rating, if the backend sends it (avgRating / AVG_RATING)
+      // average rating, if the backend sends it 
       avgRating: p.avgRating ?? p.AVG_RATING ?? null,
 
       raw: p,
     };
   }
 
+  // n is the normalized version of the property we are showing on this page
   const n = normalize(property);
 
   // numeric rating (0–5), default to 0 if we have no reviews yet
@@ -92,9 +97,11 @@ export default function Listing() {
     typeof avgRating === "number" ? avgRating : 0;
 
   // Prev and Next navigation for listing page
+  // useMemo so we only recompute the index when the dependencies change
   const { indexInList, totalInList } = useMemo(() => {
     if (!allProperties || !property) return { indexInList: null, totalInList: null };
 
+    // pull out the id of this property in a safe way
     const thisId = property.id ?? property.PROPERTY_ID ?? id;
     const idx = allProperties.findIndex(
       (p) => (p.id ?? p.PROPERTY_ID) === thisId
@@ -106,6 +113,7 @@ export default function Listing() {
     };
   }, [allProperties, property, id]);
 
+  // Go to a different property by index in the list (for previous / next buttons)
   function goToIndex(newIndex) {
     if (!allProperties || newIndex == null) return;
     if (newIndex < 0 || newIndex >= allProperties.length) return;
@@ -113,28 +121,32 @@ export default function Listing() {
     const nextProp = allProperties[newIndex];
     const nextId = nextProp.id ?? nextProp.PROPERTY_ID;
 
+    // navigate to the same Listing page but with a different property id and state
     navigate(`/listing/${nextId}`, {
       state: { property: nextProp, allProperties },
     });
   }
 
+  //when the user clicks "Previous Listing" button
   function handlePrev() {
     if (indexInList == null) return;
     goToIndex(indexInList - 1);
   }
 
+  //when the user clicks "Next Listing" button 
   function handleNext() {
     if (indexInList == null) return;
     goToIndex(indexInList + 1);
   }
 
   // simple local state for creating a review
-  const [starsInput, setStarsInput] = useState("");
-  const [commentInput, setCommentInput] = useState("");
-  const [savingReview, setSavingReview] = useState(false);
-  const [reviewError, setReviewError] = useState("");
-  const [reviewMessage, setReviewMessage] = useState("");
+  const [starsInput, setStarsInput] = useState(""); // starsInput holds the rating value entered by the user
+  const [commentInput, setCommentInput] = useState(""); // commentInput holds the comment left by user 
+  const [savingReview, setSavingReview] = useState(false); //savingReview checks if we are sending to backend 
+  const [reviewError, setReviewError] = useState(""); //ReviewError sends error if something is wrong
+  const [reviewMessage, setReviewMessage] = useState(""); // reviewMessage shows success if review saved successfully
 
+  // Handle review form submission
   async function handleSubmitReview(e) {
     e.preventDefault();
     setReviewError("");
@@ -142,6 +154,7 @@ export default function Listing() {
     setSavingReview(true);
 
     try {
+      //POST review to the backend for this specific property id 
       const response = await fetch(
         `https://localhost:5000/api/listing/${n.id}/review`,
         {
@@ -160,9 +173,9 @@ export default function Listing() {
       const data = await response.json();
 
       if (!response.ok) {
-        setReviewError(data.error || "Failed to save review.");
+        setReviewError(data.error || "Failed to save review."); //if something is wrong show error message 
       } else {
-        setReviewMessage("Review submitted!");
+        setReviewMessage("Review submitted!"); // if all is well show success message 
       }
     } catch (err) {
       console.error("Error submitting review:", err);
@@ -172,16 +185,13 @@ export default function Listing() {
     }
   }
 
+  //Our formatting starts here 
+
   // If user hit /listing/:id directly, show message 
+  // This happens if there is no property in the router state, so we send them back
   if (!property || !n) {
     return (
-      <div
-        style={{
-          padding: "2rem 3rem",
-          minHeight: "calc(100vh - 64px)",
-          boxSizing: "border-box",
-        }}
-      >
+      <div style={{ padding: "2rem 3rem" }}>
         <button
           type="button"
           onClick={() => navigate("/properties")}
@@ -207,13 +217,7 @@ export default function Listing() {
   }
 
   return (
-    <div
-      style={{
-        padding: "2rem 3rem",
-        minHeight: "calc(100vh - 64px)",
-        boxSizing: "border-box",
-      }}
-    >
+    <div style={{ padding: "2rem 3rem" }}>
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -241,7 +245,7 @@ export default function Listing() {
           border: "1px solid #e5e7eb",
           borderRadius: "12px",
           padding: "1.5rem 1.75rem",
-          maxWidth: "1000px",
+          maxWidth: "720px",
           background: "#ffffff",
           boxShadow: "0 10px 30px rgba(15, 23, 42, 0.08)",
         }}
