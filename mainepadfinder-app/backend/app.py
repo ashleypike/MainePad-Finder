@@ -22,10 +22,41 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
-""" Returns the user ID of the currently logged-in user"""
-def get_current_user_id():
-    return session.get("user_id")
+@app.get("/api/me")
+def get_me():
+    row = get_current_user_row()
+    if not row:
+        return jsonify({"error": "Not logged in"}), 401
 
+    return jsonify({
+        "userId": row["USER_ID"],
+        "username": row["USERNAME"],
+        "email": row.get("EMAIL"),
+    }), 200
+
+def get_current_user_row():
+    """
+    Look up the currently logged in user based on the 'token' cookie
+    and the SESSIONS table. Returns a row from USERS or None.
+    """
+    token = request.cookies.get("token")
+    if not token:
+        return None
+
+    cursor.execute(
+        """
+        SELECT U.USER_ID, U.USERNAME, U.EMAIL
+        FROM SESSIONS AS S
+        JOIN USERS AS U ON U.USER_ID = S.USER_ID
+        WHERE S.TOKEN = %s
+          AND S.EXPIRES_AT > UTC_TIMESTAMP()
+        ORDER BY S.CREATED_AT DESC
+        LIMIT 1
+        """,
+        (token,),
+    )
+    row = cursor.fetchone()
+    return row
 
 def login_required(f):
     @wraps(f)

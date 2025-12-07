@@ -148,7 +148,27 @@ export default function Messages() {
         setMessageText("");
 
         // refresh the thread so the new message shows up
-        await handleLoadThread(new Event("submit"));
+        try {
+          const url = new URL("https://localhost:5000/api/messages/thread");
+          url.searchParams.set("otherUsername", otherUsername.trim());
+
+          const threadResp = await fetch(url.toString(), {
+            method: "GET",
+            credentials: "include",
+          });
+          const threadData = await threadResp.json();
+
+          if (!threadResp.ok) {
+            setThreadError(threadData.error || "Could not load messages.");
+            setMessages([]);
+          } else {
+            setMessages(threadData);
+          }
+        } catch (err2) {
+          console.error("Error reloading messages thread:", err2);
+          setThreadError("Network error while loading messages.");
+          setMessages([]);
+        }
       }
     } catch (err) {
       console.error("Error sending message:", err);
