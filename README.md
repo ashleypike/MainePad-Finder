@@ -101,6 +101,22 @@ npm run dev
 * Matching properties are displayed as clickable cards
    * Click a property and it will give you specifications about that listing
 
+## Properties to Listing
+Click on a property you are interested in to get to the listing page. The listing page will give specifications on a property you would like to know more about.
+
+**What you will find:**
+* Address of the property
+* Unit number (if applicable)
+* Rent price
+* How many beds/ baths
+* Square footage
+* If it is currently available
+* The landlord information (if uploaded from Maine Pad Finder)
+* The ability to leave a review on a property/ view reviews given to the property
+   * Rate out of 5 stars
+   * Leave feedback
+* Next and Previous buttons to navigate through the other properties 
+
 ## API Documentation
 
 ### `POST /api/properties`
@@ -172,6 +188,7 @@ If city is omitted or null, the endpoint will return deals across all cities
 ]
 ```
 Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
+
 
 
 
