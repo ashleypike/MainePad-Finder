@@ -10,8 +10,8 @@ BEFORE UPDATE
 ON PROPERTY
 FOR EACH ROW
 BEGIN
-    INSERT INTO PROP_PRICE_HISTORY (PROP_ID, RENT_COST)
-    VALUES (NEW.PROP_ID, NEW.RENT_COST); -- Duplicate listings are not allowed on MySQL by default, so this will have no effect if the property's price isn't updated.
+    INSERT INTO PROP_PRICE_HISTORY (PROPERTY_ID, RENT_COST)
+    VALUES (NEW.PROPERTY_ID, NEW.RENT_COST); -- Duplicate listings are not allowed on MySQL by default, so this will have no effect if the property's price isn't updated.
 END //
 
 DELIMITER ;
