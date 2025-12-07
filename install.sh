@@ -21,8 +21,6 @@ echo "Installing backend dependencies..."
 # pip install --upgrade pip
 pip install -r requirements.txt
 
-# Deactivate venv
-deactivate
 cd ..
 
 # Install frontend dependencies
@@ -81,10 +79,15 @@ fi
 echo "Starting MySQL service..."
 net start MySQL80 || echo "MySQL service already running"
 
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < "./SQL/Database Operations/CREATE_DATABASE.sql"
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ALL_TABLE.sql"
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_INDEXES.sql"
-mysql -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_STORED.sql"
+MySQL -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" < "./SQL/Database Operations/CREATE_DATABASE.sql"
+MySQL -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ALL_TABLE.sql"
+MySQL -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_INDEXES.sql"
+MySQL -h "$DB_HOST" -u "$DB_USER" -p"$DB_PASSWORD" -D "$DB_NAME" < "./SQL/Database Operations/ADD_STORED.sql"
 
-py "./Web Scraping/Sample Data/add_property.py"
+py "./Web Scraping/add_properties.py"
 echo "CSV import completed successfully."
+
+# Deactivate venv
+cd mainepadfinder-app/backend
+deactivate
+cd ../..

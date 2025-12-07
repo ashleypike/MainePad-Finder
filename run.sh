@@ -7,7 +7,7 @@ cd mainepadfinder-app
 echo "Starting backend (Flask)..."
 cd ./backend
 source venv/scripts/activate
-python3 app.py & # Runs in background
+py app.py & # Runs in background
 cd ..
 
 echo "Backend started on http://localhost:5000"
