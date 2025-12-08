@@ -1,8 +1,7 @@
-// Author: Ashley Pike
 export default function Home() {
   return (
     <div>
-      <h1>Welcome to MainePad Finder</h1>
+      <h1>Welcome</h1>
     </div>
   );
 }

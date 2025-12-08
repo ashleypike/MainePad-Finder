@@ -1,6 +1,3 @@
-// Author: Ashley Pike
-// Allows a user to specify information to be used in the creation
-// of a new user account for MainePad Finder
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 

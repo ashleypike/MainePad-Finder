@@ -1,8 +1,3 @@
--- TITLE: ADD_PROPERTY
--- AUTHOR: Ashley Pike
--- Takes the input values and checks if the address is new and if so inserts into address table
--- Checks if property is new and if so inserts into properties table
-
 DELIMITER $$
 
 CREATE PROCEDURE ADD_PROPERTY (
@@ -18,7 +13,7 @@ CREATE PROCEDURE ADD_PROPERTY (
     IN P_CAN_RENT TINYINT(1)
 )
 BEGIN
-    DECLARE V_ADDR_ID INT;
+    DECLARE V_ADDR_ID BIGINT;
     DECLARE P_PROPERTY_ID INT;
 
     -- Check if the address exists
@@ -37,24 +32,16 @@ BEGIN
         SET V_ADDR_ID = LAST_INSERT_ID();
     END IF;
 
-    -- Check if the property exists
-    SELECT PROPERTY_ID INTO P_PROPERTY_ID
-    FROM PROPERTY
-    WHERE ADDR_ID = V_ADDR_ID
-      AND UNIT_LABEL = P_UNIT_LABEL
-    LIMIT 1;
+    -- Insert property
+    INSERT INTO PROPERTY (
+        UNIT_LABEL, RENT_COST, PROPERTY_RATING, LANDLORD_ID, 
+        SQFT, BATHROOMS, BEDROOMS, CAN_RENT, ADDR_ID
+    ) VALUES (
+        P_UNIT_LABEL, P_RENT_COST, NULL, NULL,
+        P_SQFT, P_BATHROOMS, P_BEDROOMS, P_CAN_RENT, V_ADDR_ID
+    );
 
-    IF P_PROPERTY_ID IS NULL THEN
-        -- Insert property
-        INSERT INTO PROPERTY (
-            UNIT_LABEL, RENT_COST, PROPERTY_RATING, LANDLORD_ID, 
-            SQFT, BATHROOMS, BEDROOMS, CAN_RENT, ADDR_ID
-        ) VALUES (
-            P_UNIT_LABEL, P_RENT_COST, NULL, NULL,
-            P_SQFT, P_BATHROOMS, P_BEDROOMS, P_CAN_RENT, V_ADDR_ID
-        );
-        SET P_PROPERTY_ID = LAST_INSERT_ID();
-    END IF;
+    SET P_PROPERTY_ID = LAST_INSERT_ID();
 END$$
 
 DELIMITER ;

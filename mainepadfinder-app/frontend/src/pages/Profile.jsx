@@ -2,122 +2,57 @@
   NAME: Profile.jsx
   AUTHOR: Jeffrey Fosgate
   DATE OF FIRST COMMIT: December 3, 2025
-  LAST UPDATED: December 7, 2025
   DESCRIPTION: A simple interface for personal profiles within MainePad Finder.
 */
+
+/* TODO: Implement property list for landlords */
 
 import { useEffect, useState } from "react";
 
 export default function Profile() {
 
-  const [profile, setProfile] = useState(null);
-  const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [profile, setProfile] = useState("")
+  const [properties, setProperties] = useState([])
 
   useEffect(() => {
-  async function loadProfile() {
-    try {
-      const res = await fetch("/api/profile");
-      if (!res.ok) throw new Error("Could not load profile");
-      const data = await res.json();
-      setProfile(data);
+    fetch("/api/profile").then(response => /* I THINK this is how retrieving data from the backend works... */
+      response.json().then(data => {
+        setProfile(data)
+      })
+    )
 
-      if (data.IS_LANDLORD) {
-        const propRes = await fetch("/api/profile/properties");
-        if (!propRes.ok) throw new Error("Could not load properties");
-        const propData = await propRes.json();
-        setProperties(propData);
-      }
+    if (loading) return <p>Loading profile...</p>;
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
 
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
+    const gender_text = "(they / them)"
+    switch (profile.gender) {
+      case 'M':
+        gender_text = "(he / him)"
+        break;
+      case 'F':
+        gender_text = "(she / her)"
+        break;
     }
-  }
-
-  loadProfile();
-  }, []);
-
-  if (loading) return <p>Loading profile...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
-
-  if (!profile) return <p>No profile data available.</p>; // This should never display, due to @login_required. This'll remain here for testing purposes.
-
-  let gender_text = "(they / them)";
-  if (profile.GENDER === "M") gender_text = "(he / him)";
-  if (profile.GENDER === "F") gender_text = "(she / her)";
-
-  return (
-    <div style={{maxWidth: "600px", margin:"0 auto"}}>
-      <h1 style={{textAlign: "center"}}>
-        Profile: {profile.DISPLAY_NAME}
-      </h1>
-      <h2 style={{textAlign: "center"}}>
-        <i>{gender_text}</i>
-      </h2>
-
-      {profile.PICTURE_URL && (
-        <img
-          src={profile.PICTURE_URL}
-          alt="Profile"
-        />
-      )}
-
-      <hr />
-
-      <h3>About Me:</h3>
-      {profile.USER_DESC ? (
-        <p>{profile.USER_DESC}</p>
-      ) : (
-        <p><i>No description provided.</i></p>
-      )}
-
-      <hr />
-
-      <h3>Contact Me:</h3>
-
-      <h4>Email</h4>
-      {profile.EMAIL ? (
-        <p>{profile.EMAIL}</p>
-      ) : (
-        <p><i>No email provided.</i></p>
-      )}
-
-      <h4>Phone Number</h4>
-      {profile.PHONE_NUMBER ? (
-        <p>{profile.PHONE_NUMBER}</p>
-      ) : (
-        <p><i>No phone number provided.</i></p>
-      )}
-
-    {profile.IS_LANDLORD ? (
+    
+    return (
       <>
-        <h2>Properties I Manage</h2>
-
-        {properties.length === 0 ? (
-          <p>No properties.</p>
-        ) : (
-          <ul>
-            {properties.map((p) => (
-              <li key={p.PROPERTY_ID}>
-                <strong> Property {p.PROPERTY_ID}</strong>
-                <br />
-                Rent: ${p.RENT_COST}
-                <br />
-                Beds: {p.BEDROOMS} • Baths: {p.BATHROOMS}
-                <br />
-                Status: {p.CAN_RENT ? "Available" : "Not Available"}
-              </li>
-            ))}
-          </ul>
-        )}
+        <h1 style="text-align: center">Profile: {profile.username}</h1>
+        <h2 style="text-align: center"></h2>
+        <h2 style="text-align: center"><i>{gender_text}</i></h2>
+        {profile.picture_url && <img src={profile.picture_url} />}
+        <hr />
+        <h3>About Me:</h3>
+        {profile.user_desc ? <p>{profile.user_desc}</p> : <p><i>No description provided.</i></p>}
+        <hr />
+        <h3>Contact Me:</h3>
+        <h4>Email</h4>
+        {profile.email ? <p>{profile.email}</p> : <p><i>No email provided.</i></p>}
+        <h4>Phone Number</h4>
+        {profile.phone_number ? <p>{profile.phone_number}</p> : <p><i>No phone number provided.</i></p>}
       </>
-    ) : (
-      <h2><i>Renter</i></h2>
-    )}
-    </div>
-  );
+    );
+  });
 };
 

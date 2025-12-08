@@ -10,8 +10,8 @@ export default ({ mode }) => {
     plugins: [react()],
     server: {
       https: {
-        key: fs.readFileSync(env.VITE_BACKEND_KEY_PATH),
-        cert: fs.readFileSync(env.VITE_BACKEND_CERT_PATH),
+        key: fs.readFileSync(env.VITE_SSL_KEY_PATH),
+        cert: fs.readFileSync(env.VITE_SSL_CERT_PATH),
       },
       port: 5173,
     },
