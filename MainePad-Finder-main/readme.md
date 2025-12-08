@@ -20,8 +20,11 @@ Create a new user account.
   "userType": "Renter or Landlord"
 }
 ```
-Response:
+
+**Success Response:**
+```
 {"message": "User created successfully"}
+```
 
 ## POST /api/login
 Authenticate user and create a session token.
@@ -30,14 +33,14 @@ Authenticate user and create a session token.
 ```
 {"username": "", "password": ""}
 ```
-Response:
+**Success Response:**
 ```
 {"message": "Login successful"}
 ```
 ## POST /api/logout
 Log out and remove session.
 
-Response:
+**Success Response:**
 ```
 {"message": "Logged out"}
 ```
@@ -45,14 +48,14 @@ Response:
 ## GET /api/me
 Return basic info about the logged-in user.
 
-Response:
+**Success Response:**
 ```
 {"user_id": 1, "username": "", "email": ""}
 ```
 ## GET /api/profile
 Return full profile for the logged-in user.
 
-Response:
+**Success Response:**
 ```
 {
   "EMAIL": "",
@@ -67,7 +70,7 @@ Response:
 ## GET /api/profile/properties
 Return all properties owned by the logged-in landlord.
 
-Response:
+**Success Response:**
 ```
   {
     "PROP_ID": 10,
