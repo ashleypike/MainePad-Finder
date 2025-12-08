@@ -36,36 +36,6 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor(dictionary=True)
 
-# Look up the currently logged in user based on the token cookie and the SESSIONS table
-#Author: Sophia Priola
-def get_current_user_row():
-    token = request.cookies.get("token")
-    if not token:
-        return None
-
-    cursor.execute(
-        """
-        SELECT U.USER_ID, U.USERNAME, U.EMAIL
-        FROM SESSIONS AS S
-        JOIN USERS AS U ON U.USER_ID = S.USER_ID
-        WHERE S.TOKEN = %s
-          AND S.EXPIRES_AT > UTC_TIMESTAMP()
-        ORDER BY S.CREATED_AT DESC
-        LIMIT 1
-        """,
-        (token,),
-    )
-    row = cursor.fetchone()
-    return row
-
-# Gets the current user id of the user logged in
-# Author: Sophia Priola
-def get_current_user_id():
-    row = get_current_user_row()
-    if not row:
-        return None
-    return row["USER_ID"]
-
 # This decorator wraps a function with a check to see if the user has a valid token before proceeding
 # Author: Ashley Pike
 def login_required(f):
