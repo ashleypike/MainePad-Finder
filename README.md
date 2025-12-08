@@ -66,9 +66,17 @@ The Properties page is the main search interface for MainePad-Finder. It lets us
 The properties page assumes the following services are running:
 * **Backend Flask API**
    * Base URL: `http://localhost:5000`
-   * Endpoints used: `POST /api/properties` and `POST /api/property/deals`
-   * Environment details configured: `DB_HOST, DB_USER, DB_PASSWORD, DB_NAME`
-   * MySQL database contains: `PROPERTY` and `ADDRESS` tables, `BEST_DEAL_PROPERTIES` view
+   * Endpoints used:
+       * `POST /api/properties`
+       * `POST /api/property/deals`
+   * Environment details configured:
+       * `DB_HOST`
+       * `DB_USER`
+       * `DB_PASSWORD`
+       * `DB_NAME`
+   * MySQL database contains:
+       * `PROPERTY` and `ADDRESS` tables
+       * `BEST_DEAL_PROPERTIES` view
 * **Frontend React and Vite**
   * Base URL: `http://localhost:5173`
   * Start with 
@@ -188,6 +196,52 @@ If city is omitted or null, the endpoint will return deals across all cities
 ]
 ```
 Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
+
+# Messages Usage Guide
+The Messages page allows logged-in users to send and receive messages with other users by username. It relies on a valid session cookie (token) and the messaging endpoints in the Flask backend.
+
+## Prerequisites and Setup 
+The messages feature assumes the following are running:
+* **Backend Flask API**
+   * `http://localhost:5000`
+   * Endpoints used:
+       * `GET /api/me`,
+       * `GET /api/messages/thread`
+       * `POST /api/messages/send`
+   * Session handling:
+       * `POST /api/login` issues a token cookie for authenticated users
+       * `@loginrequired` decorator validates token using `SESSIONS` table and exposes `g.user_id`
+   * Relevent tables:
+       * `USERS`
+       * `MESSAGES`
+       * `SESSIONS`
+* **Frontend React and Vite**
+   * Running at `http://localhost:5173`
+   * The Messages page is implemented in Messages.jsx and available via your React Router
+* **CORS**
+   * configured and backend allows `http://localhost:5173`
+   * Credentials (withCredentials: true) so the token cookie can be sent
+## How To Use the Messages Page
+**1. Login**
+* Log into your account to access the messages page
+* The backend sets a token cookie if login succeeds
+
+**2. Load Conversation**
+* Go back to the messages page and click load conversation if you would like to access a previous message thread
+* The frontend calls `GET /api/messages/thread?otherUsername=<username>` with the token cookie attached 
+* The backend validates the the session with `@login_required` and looks up the `USER_ID` by username
+* It then returns all messages between the current user and that user, sorted by timestamp.
+
+**3. Send a Message**
+* Type your message text into the message input box
+* Click “Send”
+* The frontend calls `POST /api/messages/send`
+* The backend validates the session with `@login_required`, resolves otherUsername to `RECIPIENT_ID` and inserts a new row into the MESSAGE table 
+* A success message is shown when sent 
+
+
+
+
 
 
 
