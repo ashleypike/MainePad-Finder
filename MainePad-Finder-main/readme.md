@@ -7,7 +7,8 @@ Authentication is session-based using a `token` cookie.
 ## POST /api/signup
 Create a new user account.
 
-Request Body:
+**Request Body:**
+```
 {
   "username": "",
   "password": "",
@@ -18,35 +19,41 @@ Request Body:
   "displayName": "",
   "userType": "Renter or Landlord"
 }
-
+```
 Response:
 {"message": "User created successfully"}
 
 ## POST /api/login
 Authenticate user and create a session token.
 
-Request Body:
+**Request Body:**
+```
 {"username": "", "password": ""}
-
+```
 Response:
+```
 {"message": "Login successful"}
-
+```
 ## POST /api/logout
 Log out and remove session.
 
 Response:
+```
 {"message": "Logged out"}
+```
 
 ## GET /api/me
 Return basic info about the logged-in user.
 
 Response:
+```
 {"user_id": 1, "username": "", "email": ""}
-
+```
 ## GET /api/profile
 Return full profile for the logged-in user.
 
 Response:
+```
 {
   "EMAIL": "",
   "PHONE_NUMBER": "",
@@ -56,12 +63,12 @@ Response:
   "DISPLAY_NAME": "",
   "IS_LANDLORD": true
 }
-
+```
 ## GET /api/profile/properties
 Return all properties owned by the logged-in landlord.
 
 Response:
-[
+```
   {
     "PROP_ID": 10,
     "UNIT_LABEL": "Apt 2B",
@@ -70,4 +77,4 @@ Response:
     "BEDROOMS": 2,
     "BATHROOMS": 1
   }
-]
+```
