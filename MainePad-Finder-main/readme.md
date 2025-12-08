@@ -1,4 +1,4 @@
-# API Documentation (Simplified)
+# API Documentation
 
 Below is a simplified summary of the backend API implemented in `mainepadfinder-app/backend/app.py`.
 
