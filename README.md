@@ -165,6 +165,10 @@ All fields are optional. Missing or null fields are simply ignored
 ```
 An array of property objects shaped for the frontend
 
+**Potential Erros:**
+
+* 500 - internal server error
+
 ### `POST /api/property/deals`
 
 **Description:** Return “best deal” properties based on how low their rent is relative to the city average
@@ -196,6 +200,10 @@ If city is omitted or null, the endpoint will return deals across all cities
 ]
 ```
 Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
+
+**Potential Errors:**
+
+* 500 - internal server error
 
 # Messages Usage Guide
 The Messages page allows logged-in users to send and receive messages with other users by username. It relies on a valid session cookie (token) and the messaging endpoints in the Flask backend.
@@ -237,9 +245,93 @@ The messages feature assumes the following are running:
 * Click “Send”
 * The frontend calls `POST /api/messages/send`
 * The backend validates the session with `@login_required`, resolves otherUsername to `RECIPIENT_ID` and inserts a new row into the MESSAGE table 
-* A success message is shown when sent 
+* A success message is shown when sent
 
+## API Documentation
 
+### `GET /api/me`
+
+**Description:** Validate the current session and return basic profile info for the currently logged-in user
+
+**Authentication:** Requires token cookie
+
+**Successful Response**
+```
+{
+  "user_id": 1,
+  "username": "spriola",
+  "email": "sophia.priola@maine.edu"
+}
+```
+### `GET /api/messages/thread`
+
+**Description:** Return the full conversation between logged in user and another user identified by username 
+
+**Authentication:** Requires token `@login_required`
+
+**Query Parameters:** otherUsername- the username of the other user in the conversation 
+
+**Example Request:**
+```
+GET /api/messages/thread?otherUsername=spriola
+Cookie: token=<session_token>
+```
+**Response:**
+```
+[
+  {
+    "msgId": 10,
+    "text": "Hi, is this apartment still available?",
+    "senderId": 1,
+    "recipientId": 2,
+    "senderUsername": "spriola",
+    "sentAt": "2025-12-07T14:35:21.000000",
+    "isMine": true
+  },
+  {
+    "msgId": 11,
+    "text": "Yes, it is! Do you want to schedule a tour?",
+    "senderId": 2,
+    "recipientId": 1,
+    "senderUsername": "jdoe",
+    "sentAt": "2025-12-07T14:36:05.000000",
+    "isMine": false
+  }
+]
+```
+**Possible Errors:**
+
+* 400 - missing otherUsername
+* 404 - user not found
+* 401 - not logged in/ invalid session
+
+### `POST /api/messages/send`
+
+**Description:** Send a message from the logged-in user to another user
+
+**Authentication:** Requires token cookie `@login_required`
+
+**Request Body:**
+```
+{
+  "otherUsername": "spriola",
+  "text": "Hi, I’m interested in your listing."
+}
+```
+* otherUsername required
+* text required
+
+**Success Response:**
+```
+{
+  "message": "Message sent"
+}
+```
+**Possible Errors:**
+
+* 400 - missing username or text
+* 404 - recipient not found
+* 401 - not logged in/ invalid session
 
 
 
