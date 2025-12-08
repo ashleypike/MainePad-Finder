@@ -302,7 +302,7 @@ Cookie: token=<session_token>
 **Possible Errors:**
 
 * 400 - missing otherUsername
-* 404 - user not found
+* 404 - server not found
 * 401 - not logged in/ invalid session
 
 ### `POST /api/messages/send`
@@ -330,7 +330,7 @@ Cookie: token=<session_token>
 **Possible Errors:**
 
 * 400 - missing username or text
-* 404 - recipient not found
+* 404 - server not found 
 * 401 - not logged in/ invalid session
 
 
