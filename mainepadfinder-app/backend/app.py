@@ -148,9 +148,8 @@ def me():
         "email": user["EMAIL"]
     }), 200
 
-# Retrieves all profile details pertaining to the user of the account currently logged in.
-# If no user is logged in, redirect to login page in accordance with @login_required
-# Author: Jeffrey Fosgate (December 3, 2025 -- Updated December 7, 2025)
+# Retrieves information about the profile of the person currently logged in.
+# Author: Jeffrey Fosgate (Created December 3, 2025 -- Last Updated December 8, 2025)
 @app.get("/api/profile")
 @login_required
 def get_prof_details():
@@ -166,8 +165,8 @@ def get_prof_details():
     
     return jsonify(prof_details), 200
 
-# Retrieves all properties belonging to the person currently logged in.
-# Author: Jeffrey Fosgate (December 7, 2025)
+# Retrieves information about the properties owned by the person currently logged in.
+# Author: Jeffrey Fosgate (Created December 6, 2025)
 @app.get("/api/profile/properties")
 @login_required
 def get_my_properties():
@@ -175,10 +174,62 @@ def get_my_properties():
     my_properties = cursor.fetchall()
     return jsonify(my_properties), 200
 
+# Selects a matchmaking partner for the user currently logged in
+# Author: Jeffrey Fosgate (Created December 7, 2025 -- Last Updated December 8, 2025)
+@app.get("/api/matchmake")
+@login_required
+def select_matchmaking_partner():
+    cursor.execute("SELECT USER_ID FROM USERS WHERE USER_ID != %s", (g.user_id,))
+    other_users = cursor.fetchall()
+    for user in [other_user["USER_ID"] for other_user in other_users]:
+        cursor.execute("SELECT * FROM INTERUSER WHERE RENTER_ID = %s AND CONNECTION_ID = %s AND SWIPED = 1", (user, g.user_id, ))
+        user_connection = cursor.fetchone()
+        if not user_connection:        
+            cursor.execute("SELECT PICTURE_URL, DISPLAY_NAME FROM USERS WHERE USER_ID = %s", (user, ))
+            other_user_account = cursor.fetchone()
+            other_user_account["MATCHMADE"] = 0
+            return jsonify(other_user_account), 200
+        else:
+            if not user_connection["BLOCKED"]:
+                cursor.execute("SELECT PICTURE_URL, DISPLAY_NAME FROM USERS WHERE USER_ID = %s", (user, ))
+                other_user_account = cursor.fetchone()
+                other_user_account["MATCHMADE"] = 1
+                return jsonify(other_user_account), 200
+            
+    return jsonify({"error": "Could not find a matchmaking partner."}), 404
+
+# Manages feedback provided by the matchmaker.
+# Author: Jeffrey Fosgate (Created December 8, 2025)
+@app.post("/api/matchmake/feedback")
+@login_required
+def matchmaking_feedback():
+    data = request.get_json()
+    partner_id = data["partner_id"]
+    liked = data["liked"]
+
+    if partner_id is None:
+        return jsonify({"error": "Missing partner_id"}), 400
+
+    # Record a swipe (accept matchmaking)
+    cursor.execute("""
+        INSERT INTO INTERUSER (RENTER_ID, CONNECTION_ID, SWIPED, BLOCKED)
+        VALUES (%s, %s, %s, %s)
+        ON DUPLICATE KEY UPDATE SWIPED = VALUES(SWIPED), BLOCKED = VALUES(BLOCKED)
+    """, (
+        g.user_id,
+        partner_id,
+        1 if liked else 0,
+        0 if liked else 1
+    ))
+
+    db.commit()
+
+    return jsonify({"message": "Feedback received"}), 200
+
 # Is the chosen property (prop_id) trending UP (0) or DOWN (1)? Return (-1) if this cannot be discerned due to insufficient data.
-# Author: Jeffrey Fosgate (December 6, 2025)
+# Author: Jeffrey Fosgate (December 7, 2025)
 def prop_price_trending(prop_id):
-    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", (prop_id,))
+    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", prop_id)
     prop_hist_data = cursor.fetchall()
     if len(prop_hist_data) < 2:
         return -1
@@ -186,7 +237,6 @@ def prop_price_trending(prop_id):
         return 0
     else:
         return 1
-
 
 # Arguments for running app.py
 # Author: Ashley Pike
