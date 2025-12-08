@@ -334,6 +334,47 @@ Cookie: token=<session_token>
 * 401 - not logged in/ invalid session
 
 
+## `POST /api/signup`
+Create a new user account.
+
+**Request Body:**
+```
+{
+  "username": "",
+  "password": "",
+  "email": "",
+  "phoneNumber": "",
+  "gender": "",
+  "birthDate": "",
+  "displayName": "",
+  "userType": "Renter or Landlord"
+}
+```
+
+**Success Response:**
+```
+{"message": "User created successfully"}
+```
+
+## `POST /api/login`
+Authenticate the user and create a session token.
+
+**Request Body:**
+```
+{"username": "", "password": ""}
+```
+**Success Response:**
+```
+{"message": "Login successful"}
+```
+## `POST /api/logout`
+Log out and remove session.
+
+**Success Response:**
+```
+{"message": "Logged out"}
+```
+
 
 
 
