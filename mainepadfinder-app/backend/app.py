@@ -229,7 +229,7 @@ def matchmaking_feedback():
 # Is the chosen property (prop_id) trending UP (0) or DOWN (1)? Return (-1) if this cannot be discerned due to insufficient data.
 # Author: Jeffrey Fosgate (December 7, 2025)
 def prop_price_trending(prop_id):
-    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROP_ID = %s ORDER BY PRICE_START DESC", prop_id)
+    cursor.execute("SELECT * FROM PROP_PRICE_HISTORY WHERE PROPERTY_ID = %s ORDER BY PRICE_START DESC", prop_id)
     prop_hist_data = cursor.fetchall()
     if len(prop_hist_data) < 2:
         return -1
