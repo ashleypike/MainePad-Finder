@@ -54,7 +54,7 @@ mkdir -p "$CERT_DIR"
 cd certs
 
 # --- Install local CA ---
-mkcert -install
+CAROOT="." mkcert -install
 
 # --- Generate certificates ---
 echo "Generating local HTTPS certificates for localhost and 127.0.0.1..."
