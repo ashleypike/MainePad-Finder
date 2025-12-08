@@ -293,7 +293,8 @@ Authenticate the user and create a session token.
 **Request Body:**
 ```
 {
-"username": "", "password": ""
+"username": "string",
+"password": "string"
 }
 ```
 
