@@ -1,4 +1,5 @@
 // Author: Ashley Pike
+// Handles page routing and protects certain routes from logged out users
 import { Routes, Route, Outlet, Link, useLocation, Navigate } from "react-router-dom";
 import { useEffect, useState, useContext, createContext, use,} from "react";
 
@@ -12,6 +13,7 @@ import Listing from "./pages/Listing.jsx"
 import Properties from "./pages/Properties.jsx"
 import ManageProperties from "./pages/ManageProperties.jsx"
 import AddProperty from "./pages/AddProperty.jsx"
+import Messages from "./pages/Messages.jsx";
 
 const AuthContext = createContext(null);
 
@@ -19,6 +21,7 @@ export function useAuth(){
   return useContext(AuthContext);
 }
 
+// Handles authentication of users session
 function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -63,6 +66,8 @@ function AuthProvider({ children }) {
 
 export {AuthProvider};
 
+// Protects routes from logged-out users
+// Redirects to log in on attempted access by logged-out user
 function ProtectedRoute({ children }) {
   const { loading, isAuthenticated } = useAuth();
   const location = useLocation();
@@ -86,7 +91,6 @@ function App() {
       <nav>
         <Link to="/">Home</Link> |
         <Link to="/properties">Properties</Link> |
-        <Link to="/signup">Signup</Link> |
 
         {isAuthenticated ? (
           <>
@@ -95,10 +99,12 @@ function App() {
             <Link to="/settings">Settings</Link> |
             <Link to="/matching">Matching</Link> |
             <Link to="/manage-properties">Manage Properties</Link> |
-            <Link to="/add-property">Add Property</Link>
+            <Link to="/add-property">Add Property</Link> |
+            <Link to="/messages">Messages</Link>
           </>
         ) : (
           <>
+            <Link to="/signup">Signup</Link> |
             <Link to="/login">Login</Link> |
           </>
         )}
@@ -112,15 +118,14 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
         <Route path="/matching" element={<ProtectedRoute><Matching /></ProtectedRoute>} />
-        <Route path="/listing" element={<Listing />} />
+        <Route path="/listing/:id" element={<Listing />} />
         <Route path="/properties" element={<Properties />} />
         <Route path="/manage-properties" element={<ProtectedRoute><ManageProperties /></ProtectedRoute>} />
         <Route path="/add-property" element={<ProtectedRoute><AddProperty /></ProtectedRoute>} />
+        <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
       </Routes>
     </>
   );
-
-
 }
 
 export default App;

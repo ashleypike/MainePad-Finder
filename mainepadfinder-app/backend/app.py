@@ -20,10 +20,8 @@ db = mysql.connector.connect(
     host = os.getenv("DB_HOST"),
     user = os.getenv("DB_USER"),
     password = os.getenv("DB_PASSWORD"),
-    database = os.getenv("DB_NAME") #,
-    ##ssl_ca = os.getenv("CA_PATH"),
-    ##ssl_cert = os.getenv("DATABASE_CERT_PATH"),
-    ##ssl_key = os.getenv("DATABASE_KEY_PATH")
+    database = os.getenv("DB_NAME"),
+    ssl_ca = os.getenv("CA_PATH")
 )
 cursor = db.cursor(dictionary=True)
 
@@ -257,7 +255,7 @@ def get_user_role(user_id: int) -> str:
 
 
 #Landlord check properties
-@app.get("/api/properties")
+@app.get("/api/manage-properties")
 @login_required
 def list_properties():
     role = get_user_role(g.user_id)
@@ -289,7 +287,7 @@ def list_properties():
     rows = cursor.fetchall()
     return jsonify(rows), 200
 
-@app.post("/api/properties")
+@app.post("/api/add-properties")
 @login_required
 def add_property():
     role = get_user_role(g.user_id)
@@ -363,7 +361,7 @@ def add_property():
     return jsonify({"message": "Property created", "propertyId": property_id}), 201
 
 #Update property details, for rentcoset and canrent
-@app.put("/api/properties/<int:property_id>")
+@app.put("/api/manage-properties/<int:property_id>")
 @login_required
 def update_property(property_id: int):
     role = get_user_role(g.user_id)
