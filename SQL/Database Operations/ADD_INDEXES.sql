@@ -18,11 +18,6 @@ CREATE INDEX IDX_DISPLAY_NAME ON USERS(DISPLAY_NAME);
 -- Including 'ADDR_ID' and 'PROPERTY_ID' allows queries to access these often used values without having to read the full table row, which increases performance.
 CREATE INDEX IDX_RENT_ADDR ON PROPERTY(RENT_COST, ADDR_ID, PROPERTY_ID);
 
--- Indexing TIME_STAMP helps MySQL efficiently find the most recent notifications for a 
--- user without scanning all older rows, which is important as the amount of notifications grow.
-CREATE INDEX IDX_NOTIFICATION_TIMESTAMP ON NOTIFICATION(TIME_STAMP);
-
-
 -- Such as the previous index, indexing TIME_STAMP allows MySQL to efficiently sort and limit the result set to the
 -- newest messages, improving performance.
 CREATE INDEX IDX_MESSAGE_TIMESTAMP ON MESSAGE(TIME_STAMP);
