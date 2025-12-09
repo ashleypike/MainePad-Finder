@@ -1,3 +1,4 @@
+-- Creates table for landlord for use in properties
 CREATE TABLE IF NOT EXISTS LANDLORD (
 	USER_ID INT UNSIGNED PRIMARY KEY,
 	FOREIGN KEY (USER_ID) 

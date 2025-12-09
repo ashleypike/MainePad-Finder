@@ -1,3 +1,4 @@
+-- Creates table for required renter settings (e.g. max distance to search)
 CREATE TABLE IF NOT EXISTS RENTER_SETTINGS (
     USER_ID INT UNSIGNED PRIMARY KEY,
     DISTANCE_MAX INT,

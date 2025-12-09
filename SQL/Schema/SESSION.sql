@@ -1,3 +1,4 @@
+-- Creates table to store user session tokens
 CREATE TABLE IF NOT EXISTS SESSIONS (
   TOKEN VARCHAR(128) PRIMARY KEY,
   USER_ID INT UNSIGNED NOT NULL,

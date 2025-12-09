@@ -1,3 +1,4 @@
+-- Creates table for interuser relations (e.g. matched, blocked)
 CREATE TABLE IF NOT EXISTS INTERUSER (
   RENTER_ID INT UNSIGNED,
   CONNECTION_ID INT UNSIGNED,

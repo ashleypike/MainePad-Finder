@@ -1,3 +1,4 @@
+-- Creates table for renters for use in review, renter_preferences, renter_settings
 CREATE TABLE IF NOT EXISTS RENTER (
 	USER_ID INT UNSIGNED PRIMARY KEY,
 	FOREIGN KEY (USER_ID) REFERENCES USERS(USER_ID)

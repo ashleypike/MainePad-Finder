@@ -1,3 +1,4 @@
+-- Creates table for one to many renter to renter_preferences
 CREATE TABLE IF NOT EXISTS HAS_PREFERENCE (
     USER_ID INT UNSIGNED PRIMARY KEY,
     PREFERENCE_ID INT UNSIGNED PRIMARY KEY,
