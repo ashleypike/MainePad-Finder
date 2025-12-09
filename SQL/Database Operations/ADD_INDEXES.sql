@@ -21,9 +21,6 @@ CREATE INDEX IDX_CITY ON ADDRESS(CITY);
 -- When users filter on min beds and min baths, this index lets MySQL quickly find the subset instead of checking every row
 CREATE INDEX IDX_PROPERTY_BEDS_BATHS ON PROPERTY (BEDROOMS, BATHROOMS);
 
--- Helps join PROPERTY to ADDRESS, filter by CAN_RENT and RENT_COST
-CREATE INDEX IDX_PROPERTY_ADDR_CANRENT_RENT ON PROPERTY (ADDR_ID, CAN_RENT, RENT_COST);
-
 -- Improves performance when logging out or checking if user has previous session
 CREATE INDEX IDX_SESSIONS_USER ON SESSIONS(USER_ID);
 
