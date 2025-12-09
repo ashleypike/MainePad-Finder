@@ -1,15 +1,6 @@
--- We expect the application to frequently look up a user by their username (e.g., login, profile lookup). 
--- Without this index, queries such as profile searches would require scanning the entire USERS table.
-CREATE INDEX IDX_USERNAME ON USERS(USERNAME);
-
 -- Similar to usernames, emails are often used for login and password recovery and must be unique.
 -- Using this as an index avoids doing a full table scan and making existence checks and lookups much faster.
 CREATE INDEX IDX_EMAIL ON USERS(EMAIL);
-
--- Display names are used for searching.
--- For example you can search for users whos display name starts with "Jeff".
--- An index on DISPLAY_NAME allows MySQL to efficiently seek into the range of matching names instead of scanning every row.
-CREATE INDEX IDX_DISPLAY_NAME ON USERS(DISPLAY_NAME);
 
 -- Our application supports queries that filter properties by a maximum or minimum rent amount.
 -- Without an index, MySQL would need to scan every property to check its rent.
