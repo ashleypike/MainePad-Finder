@@ -20,7 +20,7 @@ export default function AddProperty() {
     setError("");
 
     try {
-      const res = await fetch("https://localhost:5000/api/properties", {
+      const res = await fetch("https://localhost:5000/api/add-properties", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

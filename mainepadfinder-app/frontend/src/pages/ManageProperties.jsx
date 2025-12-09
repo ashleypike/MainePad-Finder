@@ -10,7 +10,7 @@ export default function ManageProperties() {
     setError("");
 
     try {
-      const res = await fetch("https://localhost:5000/api/properties", {
+      const res = await fetch("https://localhost:5000/api/manage-properties", {
         credentials: "include",
       });
 
@@ -38,7 +38,7 @@ export default function ManageProperties() {
   const toggleAvailability = async (property) => {
     try {
       const res = await fetch(
-        `https://localhost:5000/api/properties/${property.PROPERTY_ID}`,
+        `https://localhost:5000/api/manage-properties/${property.PROPERTY_ID}`,
         {
           method: "PUT",
           credentials: "include",
