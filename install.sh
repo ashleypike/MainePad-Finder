@@ -56,13 +56,20 @@ cd certs
 # --- Install local CA ---
 CAROOT="." mkcert -install
 
+powershell.exe -Command \
+    "Import-Certificate -FilePath './rootCA.pem' -CertStoreLocation Cert:\LocalMachine\Root | Out-Null"
+
 # --- Generate certificates ---
 echo "Generating local HTTPS certificates for localhost and 127.0.0.1..."
-mkcert -cert-file "frontend.crt" -key-file "frontend.key" localhost 127.0.0.1
-mkcert -cert-file "backend.crt" -key-file "backend.key" localhost 127.0.0.1
-mkcert -cert-file "database.crt" -key-file "database.key" localhost 127.0.0.1
+CAROOT="." mkcert -cert-file "frontend.crt" -key-file "frontend.key" localhost 127.0.0.1
+CAROOT="." mkcert -cert-file "backend.crt" -key-file "backend.key" localhost 127.0.0.1
+CAROOT="." mkcert -cert-file "database.crt" -key-file "database.key" localhost 127.0.0.1
 
-echo "Certificates generated at $CERT_DIR"
+for f in frontend.crt backend.crt database.crt; do
+    powershell.exe -Command "Import-Certificate -FilePath './$f' -CertStoreLocation Cert:\LocalMachine\Root | Out-Null"
+done
+
+echo "Certificates generated at $CERT_DIR, CA installed, Certs installed"
 cd ..
 
 
