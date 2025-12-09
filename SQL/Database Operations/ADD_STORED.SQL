@@ -16,30 +16,13 @@ END //
 
 DELIMITER ;
 
-
--- TITLE: Fosgate_GET_AVG_RATING
--- AUTHOR: Jeffrey Fosgate
--- DATE OF GITHUB COMMIT: 11/5/2025
--- A simple stored function for calculating the average rating of a property. Returns NULL when no entries exist.alter
--- Several queries used for testing the accuracy of this function have been commented out and can be un-commented to demonstrate the command's efficacy.
-DELIMITER $$
-CREATE FUNCTION GET_AVG_RATING (PROP_ID INT)
-RETURNS FLOAT(2,1)
-DETERMINISTIC
-BEGIN
-	DECLARE AVG_STARS FLOAT(2,1);
-    -- Uncomment the line below if REVIEW_RATINGTEST is uncommented for testing purposes.
-    -- SELECT AVG(STARS) INTO AVG_STARS FROM REVIEW_RATINGTEST WHERE PROPERTY_ID = PROP_ID;
-	SELECT AVG(STARS) INTO AVG_STARS FROM REVIEW WHERE PROPERTY_ID = PROP_ID;
-    RETURN AVG_STARS;
-END$$
-DELIMITER ;
-
-
 -- TITLE: UPDATE_PROPERTY_RATING
 -- AUTHOR: Sophia Priola 
 -- Whenever a new review is inserted, this trigger recalculates the avg star rating
 -- and updates the property rating 
+-- This trigger was chosen over the GET_AVG_RATING function due to a faster timing
+-- GET_AVG_RATING function: 0.096 
+-- UPDATE_PROPERTY_RATING trigger: 0.024
 
 CREATE TRIGGER UPDATE_PROPERTY_RATING
 AFTER INSERT ON REVIEW
