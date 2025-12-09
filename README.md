@@ -125,85 +125,6 @@ Click on a property you are interested in to get to the listing page. The listin
    * Leave feedback
 * Next and Previous buttons to navigate through the other properties 
 
-## API Documentation
-
-### `POST /api/properties`
-
-**Description:**
-Return a list of properties matching the optional filter criteria
-
-**Request body**
-```
-{
-  "city": "Portland",     // optional, substring match on A.CITY
-  "minRent": 800,         // optional, minimum rent
-  "maxRent": 1800,        // optional, maximum rent
-  "minBeds": 1,           // optional, minimum number of bedrooms
-  "minBaths": 1           // optional, minimum number of bathrooms
-}
-```
-All fields are optional. Missing or null fields are simply ignored
-
-**Response body**
-```
-[
-  {
-    "id": 123,
-    "title": "2 bed • 1 bath",   // or UNIT_LABEL from DB if present
-    "rent": 1500,
-    "beds": 2,
-    "baths": 1,
-    "canRent": true,
-    "sqft": 900,
-    "city": "Portland",
-    "state": "ME",
-    "addressLine1": "123 Main St",
-    "addressLine2": null,
-    "zipCode": "04101"
-  }
-]
-```
-An array of property objects shaped for the frontend
-
-**Potential Erros:**
-
-* 500 - internal server error
-
-### `POST /api/property/deals`
-
-**Description:** Return “best deal” properties based on how low their rent is relative to the city average
-
-**Request body**
-```
-{
-  "city": "Portland"    // optional, filter deals to a given city
-}
-```
-If city is omitted or null, the endpoint will return deals across all cities
-
-**Response body**
-```
-[
-  {
-    "id": 456,
-    "title": "Studio • 1 bath",
-    "rent": 900,
-    "beds": 0,
-    "baths": 1,
-    "canRent": true,
-    "sqft": 450,
-    "city": "Portland",
-    "state": "ME",
-    "cityAvgRent": 1300,
-    "rentPctOfCityAvg": 0.69
-  }
-]
-```
-Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
-
-**Potential Errors:**
-
-* 500 - internal server error
 
 # Messages Usage Guide
 The Messages page allows logged-in users to send and receive messages with other users by username. It relies on a valid session cookie (token) and the messaging endpoints in the Flask backend.
@@ -334,8 +255,176 @@ Cookie: token=<session_token>
 * 401 - not logged in/ invalid session
 
 
+## `POST /api/signup`
+Create a new user account.
+
+**Request Body:**
+```
+{
+  "username": "",
+  "password": "",
+  "email": "",
+  "phoneNumber": "",
+  "gender": "",
+  "birthDate": "",
+  "displayName": "",
+  "userType": "Renter or Landlord"
+}
+```
+
+**Success Response:**
+```
+{
+"message": "User created successfully"
+}
+```
+
+**Error Response:**
+```
+{
+"error": "Failed to create user"
+}
+```
 
 
+## `POST /api/login`
+Authenticate the user and create a session token.
+
+**Request Body:**
+```
+{
+"username": "string",
+"password": "string"
+}
+```
+
+**Success Response:**
+```
+{
+"message": "Login successful"
+}
+```
+
+**Error Response:**
+```
+{
+"error": "Invalid credentials"
+}
+```
+
+
+## `POST /api/logout`
+Log out and remove session.
+
+**Success Response:**
+```
+{
+"message": "Logged out"
+}
+```
+
+
+## `GET /api/profile`
+Return detailed account information for the logged-in user.
+
+**Success Response:**
+```
+{
+  "EMAIL": "Yunlong@example.com",
+  "PHONE_NUMBER": "207-555-1234",
+  "GENDER": "F",
+  "USER_DESC": "Student at UMaine.",
+  "PICTURE_URL": "https://example.com/avatar.png",
+  "DISPLAY_NAME": "Alice",
+  "IS_LANDLORD": false
+}
+```
+
+**Error Response:**
+```
+{
+"error": "Profile not found."
+}
+```
+
+
+### `POST /api/properties`
+
+**Description:**
+Return a list of properties matching the optional filter criteria
+
+**Request body**
+```
+{
+  "city": "Portland",     // optional, substring match on A.CITY
+  "minRent": 800,         // optional, minimum rent
+  "maxRent": 1800,        // optional, maximum rent
+  "minBeds": 1,           // optional, minimum number of bedrooms
+  "minBaths": 1           // optional, minimum number of bathrooms
+}
+```
+All fields are optional. Missing or null fields are simply ignored
+
+**Response body**
+```
+[
+  {
+    "id": 123,
+    "title": "2 bed • 1 bath",   // or UNIT_LABEL from DB if present
+    "rent": 1500,
+    "beds": 2,
+    "baths": 1,
+    "canRent": true,
+    "sqft": 900,
+    "city": "Portland",
+    "state": "ME",
+    "addressLine1": "123 Main St",
+    "addressLine2": null,
+    "zipCode": "04101"
+  }
+]
+```
+An array of property objects shaped for the frontend
+
+**Potential Erros:**
+
+* 500 - internal server error
+
+### `POST /api/property/deals`
+
+**Description:** Return “best deal” properties based on how low their rent is relative to the city average
+
+**Request body**
+```
+{
+  "city": "Portland"    // optional, filter deals to a given city
+}
+```
+If city is omitted or null, the endpoint will return deals across all cities
+
+**Response body**
+```
+[
+  {
+    "id": 456,
+    "title": "Studio • 1 bath",
+    "rent": 900,
+    "beds": 0,
+    "baths": 1,
+    "canRent": true,
+    "sqft": 450,
+    "city": "Portland",
+    "state": "ME",
+    "cityAvgRent": 1300,
+    "rentPctOfCityAvg": 0.69
+  }
+]
+```
+Properties.jsx can use `cityAvgRent` and `rentPctOfCityAvg` to highlight how good the deal is
+
+**Potential Errors:**
+
+* 500 - internal server error
 
 
 
